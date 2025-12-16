@@ -14,7 +14,7 @@
 
 import Foundation
 import PythonKit
-import TaylorTorch
+import Torch
 
 // Initialize Python. This comment is a hook for internal use, do not remove.
 

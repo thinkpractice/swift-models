@@ -1,5 +1,5 @@
 import Datasets
-import TaylorTorch
+import Torch
 import XCTest
 
 final class ImagenetteTests: XCTestCase {

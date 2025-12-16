@@ -15,7 +15,7 @@
 import Datasets
 import Foundation
 import RecommendationModels
-import TaylorTorch
+import Torch
 
 let dataset = MovieLens(trainBatchSize: 1024)
 let numUsers = dataset.numUsers

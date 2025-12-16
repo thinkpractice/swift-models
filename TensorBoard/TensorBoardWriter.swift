@@ -1,5 +1,5 @@
 import Foundation
-import TaylorTorch
+import Torch
 import TrainingLoop
 
 /// Returns a TrainingLoop callback that logs training and validation statistics

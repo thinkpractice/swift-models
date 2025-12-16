@@ -16,7 +16,7 @@ import Checkpoints
 import Datasets
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 extension TransformerEncoderLayer {
     public mutating func load(bert reader: CheckpointReader, prefix: String) {

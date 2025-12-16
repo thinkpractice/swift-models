@@ -1,4 +1,4 @@
-import TaylorTorch
+import Torch
 
 /// Metrics that can be registered into TrainingLoop.
 public enum TrainingMetrics {

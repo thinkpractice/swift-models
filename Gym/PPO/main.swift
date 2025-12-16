@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import PythonKit
-import TaylorTorch
+import Torch
 
 // Force unwrapping with `!` does not provide source location when unwrapping `nil`, so we instead
 // make a utility function for debuggability.

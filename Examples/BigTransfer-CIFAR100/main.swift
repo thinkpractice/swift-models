@@ -21,7 +21,7 @@ import Datasets
 import Foundation
 import ImageClassificationModels
 import PythonKit
-import TaylorTorch
+import Torch
 
 // let tf = Python.import("tensorflow")
 let np = Python.import("numpy")

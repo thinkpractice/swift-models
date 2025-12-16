@@ -19,7 +19,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 public struct Imagewoof<Entropy: RandomNumberGenerator> {
     /// Type of the collection of non-collated batches.

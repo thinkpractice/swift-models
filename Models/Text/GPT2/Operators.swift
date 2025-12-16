@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TaylorTorch
+import Torch
 
 // Contains operators needed for Transformer; these will likely be upstreamed into swift-apis
 

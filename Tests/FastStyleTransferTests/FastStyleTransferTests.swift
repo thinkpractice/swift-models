@@ -1,4 +1,4 @@
-import TaylorTorch
+import Torch
 import XCTest
 
 @testable import FastStyleTransfer

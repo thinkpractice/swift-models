@@ -16,7 +16,7 @@ import AutoencoderCallback
 import Datasets
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 import TrainingLoop
 
 let epochCount = 10

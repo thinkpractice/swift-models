@@ -17,7 +17,7 @@ import Datasets
 import Foundation
 import ModelSupport
 import SwiftProtobuf
-import TaylorTorch
+import Torch
 
 extension Vocabulary {
     public init(fromSentencePieceModel fileURL: URL) throws {

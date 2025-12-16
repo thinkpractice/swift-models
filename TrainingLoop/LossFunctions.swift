@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TaylorTorch
+import Torch
 
 // This is a convenience function to provide a two-argument version of softmaxCrossEntropy()
 // for common image-based training loops.

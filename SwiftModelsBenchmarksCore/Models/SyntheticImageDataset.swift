@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Datasets
-import TaylorTorch
+import Torch
 
 public class SyntheticImageDataset<Entropy: RandomNumberGenerator> {
     /// Type of the collection of non-collated batches.

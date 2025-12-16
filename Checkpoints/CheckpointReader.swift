@@ -21,7 +21,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 /// A Swift-native TensorFlow v2 checkpoint reader that can download all checkpoint files from
 /// remote locations and store them in a local temporary directory. This reader has no dependencies

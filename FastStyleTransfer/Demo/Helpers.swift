@@ -1,7 +1,7 @@
 import Checkpoints
 import FastStyleTransfer
 import Foundation
-import TaylorTorch
+import Torch
 
 extension TransformerNet: ImportableLayer {}
 

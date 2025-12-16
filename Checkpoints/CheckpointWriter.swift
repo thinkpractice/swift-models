@@ -14,7 +14,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 // TODO: Extend handling to different tensor types.
 

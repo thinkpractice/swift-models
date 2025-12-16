@@ -35,14 +35,14 @@ let package = Package(
             name: "Checkpoints",
             dependencies: [
                 .product(name: "SwiftProtobuf", package: "swift-protobuf"),
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "ModelSupport"
             ],
             path: "Checkpoints"),
         .target(
             name: "Datasets",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "ModelSupport"
             ],
             path: "Datasets"),
@@ -50,7 +50,7 @@ let package = Package(
         .target(
             name: "ModelSupport",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "STBImage"
             ],
             path: "Support",
@@ -60,43 +60,43 @@ let package = Package(
             name: "TensorBoard",
             dependencies: [
                 .product(name: "SwiftProtobuf", package: "swift-protobuf"),
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "ModelSupport",
                 "TrainingLoop"
             ],
             path: "TensorBoard"),
         .target(
             name: "ImageClassificationModels",
-            dependencies: [.product(name: "TaylorTorch", package: "taylortorch")],
+            dependencies: [.product(name: "Torch", package: "taylortorch")],
             path: "Models/ImageClassification"),
         .target(
             name: "VideoClassificationModels",
-            dependencies: [.product(name: "TaylorTorch", package: "taylortorch")],
+            dependencies: [.product(name: "Torch", package: "taylortorch")],
             path: "Models/Spatiotemporal"),
         .target(
             name: "TextModels",
             dependencies: [
                 .product(name: "SwiftProtobuf", package: "swift-protobuf"),
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Checkpoints",
                 "Datasets"
             ],
             path: "Models/Text"),
         .target(
             name: "RecommendationModels",
-            dependencies: [.product(name: "TaylorTorch", package: "taylortorch")],
+            dependencies: [.product(name: "Torch", package: "taylortorch")],
             path: "Models/Recommendation"),
         .target(
             name: "TrainingLoop",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "ModelSupport"
             ],
             path: "TrainingLoop"),
         .executableTarget(
             name: "Autoencoder1D",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ModelSupport",
                 "TrainingLoop",
@@ -106,7 +106,7 @@ let package = Package(
         .executableTarget(
             name: "Autoencoder2D",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ModelSupport"
             ],
@@ -114,7 +114,7 @@ let package = Package(
         .executableTarget(
             name: "VariationalAutoencoder1D",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ModelSupport"
             ],
@@ -122,39 +122,39 @@ let package = Package(
         .target(
             name: "AutoencoderCallback",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "ModelSupport",
                 "TrainingLoop"
             ],
             path: "Autoencoder/Callback"),
         .executableTarget(
             name: "Catch",
-            dependencies: [.product(name: "TaylorTorch", package: "taylortorch")],
+            dependencies: [.product(name: "Torch", package: "taylortorch")],
             path: "Catch"),
         .executableTarget(
             name: "Gym-FrozenLake",
-            dependencies: [.product(name: "TaylorTorch", package: "taylortorch")],
+            dependencies: [.product(name: "Torch", package: "taylortorch")],
             path: "Gym/FrozenLake"),
         .executableTarget(
             name: "Gym-CartPole",
-            dependencies: [.product(name: "TaylorTorch", package: "taylortorch")],
+            dependencies: [.product(name: "Torch", package: "taylortorch")],
             path: "Gym/CartPole"),
         .executableTarget(
             name: "Gym-Blackjack",
-            dependencies: [.product(name: "TaylorTorch", package: "taylortorch")],
+            dependencies: [.product(name: "Torch", package: "taylortorch")],
             path: "Gym/Blackjack"),
         .executableTarget(
             name: "Gym-DQN",
-            dependencies: [.product(name: "TaylorTorch", package: "taylortorch")],
+            dependencies: [.product(name: "Torch", package: "taylortorch")],
             path: "Gym/DQN"),
         .executableTarget(
             name: "Gym-PPO",
-            dependencies: [.product(name: "TaylorTorch", package: "taylortorch")],
+            dependencies: [.product(name: "Torch", package: "taylortorch")],
             path: "Gym/PPO"),
         .executableTarget(
             name: "VGG-Imagewoof",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ImageClassificationModels",
                 "TrainingLoop"
@@ -163,21 +163,21 @@ let package = Package(
         .executableTarget(
             name: "Regression-BostonHousing",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets"
             ],
             path: "Examples/Regression-BostonHousing"),
         .executableTarget(
             name: "Custom-CIFAR10",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets"
             ],
             path: "Examples/Custom-CIFAR10"),
         .executableTarget(
             name: "ResNet-CIFAR10",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ImageClassificationModels",
                 "TrainingLoop"
@@ -186,7 +186,7 @@ let package = Package(
         .executableTarget(
             name: "BigTransfer-CIFAR100",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ImageClassificationModels"
             ],
@@ -194,7 +194,7 @@ let package = Package(
         .executableTarget(
             name: "Shallow-Water-PDE",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Benchmark", package: "swift-benchmark"),
                 "ModelSupport"
@@ -203,7 +203,7 @@ let package = Package(
         .executableTarget(
             name: "LeNet-MNIST",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ImageClassificationModels",
                 "TrainingLoop"
@@ -212,7 +212,7 @@ let package = Package(
         .executableTarget(
             name: "MobileNetV1-Imagenette",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ImageClassificationModels",
                 "TrainingLoop"
@@ -221,7 +221,7 @@ let package = Package(
         .executableTarget(
             name: "MobileNetV2-Imagenette",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ImageClassificationModels",
                 "TrainingLoop"
@@ -230,7 +230,7 @@ let package = Package(
         .executableTarget(
             name: "ResNet50-ImageNet",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ImageClassificationModels",
                 "TrainingLoop",
@@ -240,7 +240,7 @@ let package = Package(
         .executableTarget(
             name: "PersonLab",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Checkpoints", "ModelSupport",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ],
@@ -248,7 +248,7 @@ let package = Package(
         .target(
             name: "MiniGo",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Checkpoints"
             ],
             path: "MiniGo",
@@ -256,7 +256,7 @@ let package = Package(
         .executableTarget(
             name: "MiniGoDemo",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "MiniGo"
             ],
             path: "MiniGo",
@@ -264,7 +264,7 @@ let package = Package(
         .executableTarget(
             name: "NeuMF-MovieLens",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "RecommendationModels",
                 "Datasets"
             ],
@@ -272,38 +272,38 @@ let package = Package(
         .testTarget(
             name: "MiniGoTests",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "MiniGo"
             ]),
         .testTarget(
             name: "ImageClassificationTests",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "ImageClassificationModels"
             ]),
         .testTarget(
             name: "VideoClassificationTests",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "VideoClassificationModels"
             ]),
         .testTarget(
             name: "RecommendationModelTests",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "RecommendationModels"
             ]),
         .testTarget(
             name: "DatasetsTests",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "TextModels"
             ]),
         .executableTarget(
             name: "GPT2-Inference",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "TextModels"
             ],
             path: "Examples/GPT2-Inference",
@@ -311,7 +311,7 @@ let package = Package(
         .executableTarget(
             name: "GPT2-WikiText2",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "TextModels",
                 "TrainingLoop",
@@ -321,13 +321,13 @@ let package = Package(
         .testTarget(
             name: "TextTests",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "TextModels"
             ]),
         .executableTarget(
             name: "GAN",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ModelSupport"
             ],
@@ -335,7 +335,7 @@ let package = Package(
         .executableTarget(
             name: "DCGAN",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ModelSupport"
             ],
@@ -343,7 +343,7 @@ let package = Package(
         .target(
             name: "FastStyleTransfer",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Checkpoints"
             ],
             path: "FastStyleTransfer",
@@ -351,20 +351,20 @@ let package = Package(
         .executableTarget(
             name: "FastStyleTransferDemo",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "FastStyleTransfer"
             ],
             path: "FastStyleTransfer/Demo"),
         .testTarget(
             name: "FastStyleTransferTests",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "FastStyleTransfer"
             ]),
         .target(
             name: "SwiftModelsBenchmarksCore",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets", "ModelSupport", "ImageClassificationModels",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 "TextModels",
@@ -374,7 +374,7 @@ let package = Package(
         .executableTarget(
             name: "SwiftModelsBenchmarks",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "SwiftModelsBenchmarksCore"
             ],
             path: "SwiftModelsBenchmarks"
@@ -382,14 +382,14 @@ let package = Package(
         .testTarget(
             name: "CheckpointTests",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Checkpoints",
                 "ImageClassificationModels"
             ]),
         .executableTarget(
             name: "BERT-CoLA",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "TextModels",
                 "Datasets",
                 "TrainingLoop"
@@ -398,14 +398,14 @@ let package = Package(
         .testTarget(
             name: "SupportTests",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "ModelSupport"
             ]),
         .executableTarget(
             name: "CycleGAN",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "ModelSupport",
                 "Datasets"
             ],
@@ -415,7 +415,7 @@ let package = Package(
             name: "pix2pix",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "ModelSupport",
                 "Datasets",
                 "Checkpoints"
@@ -426,7 +426,7 @@ let package = Package(
         .executableTarget(
             name: "pix2pixDemo",
             dependencies: [
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "pix2pix"
             ],
             path: "pix2pix",
@@ -436,7 +436,7 @@ let package = Package(
             name: "WordSeg",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "TaylorTorch", package: "taylortorch"),
+                .product(name: "Torch", package: "taylortorch"),
                 "Datasets",
                 "ModelSupport",
                 "TextModels"

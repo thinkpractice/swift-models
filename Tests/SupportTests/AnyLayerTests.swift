@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import ModelSupport
-import TaylorTorch
+import Torch
 import XCTest
 
 struct ElementaryFunctionsTests<

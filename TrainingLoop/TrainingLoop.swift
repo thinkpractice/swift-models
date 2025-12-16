@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import ModelSupport
-import TaylorTorch
+import Torch
 
 // Workaround https://bugs.swift.org/browse/TF-1122 that prevents us from registering a
 // loss function inside our TrainingLoop struct

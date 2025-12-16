@@ -20,7 +20,7 @@
 // DOI=http://dx.doi.org/10.1145/2827872
 
 import Foundation
-import TaylorTorch
+import Torch
 
 extension Sequence where Element: Collection {
     subscript(column column: Element.Index) -> [Element.Iterator.Element] {

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TaylorTorch
+import Torch
 
 public struct NetD: Layer {
     var module: Sequential<Sequential<Conv2D<Float>, Sequential<Function<Tensor<Float>, Tensor<Float>>, Sequential<Conv2D<Float>, Sequential<BatchNorm<Float>, Sequential<Function<Tensor<Float>, Tensor<Float>>, Sequential<Conv2D<Float>, Sequential<BatchNorm<Float>, Function<Tensor<Float>, Tensor<Float>>>>>>>>>, Sequential<ConvLayer, Sequential<BatchNorm<Float>, Sequential<Function<Tensor<Float>, Tensor<Float>>, ConvLayer>>>>

@@ -15,7 +15,7 @@
 import Benchmark
 import Datasets
 import ImageClassificationModels
-import TaylorTorch
+import Torch
 
 protocol ImageClassificationModel: Layer where Input == Tensor<Float>, Output == Tensor<Float> {
     init()

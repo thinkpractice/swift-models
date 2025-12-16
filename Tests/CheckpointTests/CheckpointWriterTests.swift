@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import ImageClassificationModels
-import TaylorTorch
+import Torch
 import XCTest
 
 @testable import Checkpoints

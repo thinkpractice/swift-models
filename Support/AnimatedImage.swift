@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Foundation
-import TaylorTorch
+import Torch
 
 /// A write-only representation of a GIF that animates between sequential frames, constructed from
 /// a stack of Tensors.

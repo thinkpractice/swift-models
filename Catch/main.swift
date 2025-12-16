@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TaylorTorch
+import Torch
 
 // Note: This is a work in progress and training doesn't quite work.
 // Here are areas for improvement:

@@ -17,7 +17,7 @@
 
 import Datasets
 import ModelSupport
-import TaylorTorch
+import Torch
 
 public struct BERTClassifier: Module, Regularizable {
     public var bert: BERT

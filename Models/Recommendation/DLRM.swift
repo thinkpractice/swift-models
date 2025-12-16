@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TaylorTorch
+import Torch
 
 /// The DLRM model is parameterized to support multiple ways of combining the latent spaces of the inputs.
 public enum InteractionType {

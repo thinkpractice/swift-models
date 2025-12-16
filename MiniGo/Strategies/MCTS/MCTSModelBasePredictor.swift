@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TaylorTorch
+import Torch
 
 public protocol InferenceModel {
     /// Predicts the model output based on input tensor.

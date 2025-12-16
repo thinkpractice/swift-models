@@ -15,7 +15,7 @@
 import Benchmark
 import Datasets
 import ImageClassificationModels
-import TaylorTorch
+import Torch
 
 func makeRandomTensor(
     batchSize: Int,

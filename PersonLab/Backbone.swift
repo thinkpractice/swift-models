@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Checkpoints
-import TaylorTorch
+import Torch
 
 public struct DepthwiseSeparableConvBlock: Layer {
   var dConv: DepthwiseConv2D<Float>

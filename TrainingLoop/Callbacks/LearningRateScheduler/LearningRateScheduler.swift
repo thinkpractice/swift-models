@@ -1,4 +1,4 @@
-import TaylorTorch
+import Torch
 
 /// Returns a TrainingLoop callback that will change the learning rate according to `schedule`.
 public func learningRateScheduler<L: TrainingLoopProtocol>(

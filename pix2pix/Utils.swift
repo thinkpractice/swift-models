@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Foundation
-import TaylorTorch
+import Torch
 
 #if os(macOS)
     public func random() -> UInt32 {

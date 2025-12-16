@@ -14,7 +14,7 @@
 
 import Datasets
 import ModelSupport
-import TaylorTorch
+import Torch
 import XCTest
 
 @testable import TextModels

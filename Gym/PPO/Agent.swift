@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import PythonKit
-import TaylorTorch
+import Torch
 
 /// Agent that uses the Proximal Policy Optimization (PPO).
 ///

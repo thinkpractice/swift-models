@@ -18,7 +18,7 @@
 // https://arxiv.org/abs/1708.07747
 
 import Foundation
-import TaylorTorch
+import Torch
 
 public struct FashionMNIST<Entropy: RandomNumberGenerator> {
     /// Type of the collection of non-collated batches.

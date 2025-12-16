@@ -1,4 +1,4 @@
-import TaylorTorch
+import Torch
 import Foundation
 
 /// A model that applies style.

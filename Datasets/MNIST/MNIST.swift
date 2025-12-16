@@ -18,7 +18,7 @@
 // http://yann.lecun.com/exdb/mnist/
 
 import Foundation
-import TaylorTorch
+import Torch
 
 public struct MNIST<Entropy: RandomNumberGenerator> {
     /// Type of the collection of non-collated batches.

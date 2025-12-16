@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Foundation
-import TaylorTorch
+import Torch
 
 func mandelbrotSet(
     iterations: Int, tolerance: Float, region: ComplexRegion, imageSize: ImageSize, device: Device

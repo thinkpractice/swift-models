@@ -17,7 +17,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 /// CoLA example.
 public struct CoLAExample {

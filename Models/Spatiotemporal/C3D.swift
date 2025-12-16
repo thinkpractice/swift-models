@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TaylorTorch
+import Torch
 
 // Original Paper:
 // "Learning Spatiotemporal Features with 3D Convolutional Networks"

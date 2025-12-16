@@ -21,7 +21,7 @@
 // verified by the authors.
 
 import ModelSupport
-import TaylorTorch
+import Torch
 
 /// Types that can be optimized by an optimizer.
 ///

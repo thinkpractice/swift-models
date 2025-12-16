@@ -15,7 +15,7 @@
 import Checkpoints
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 extension GPT2 {
     public func writeCheckpoint(

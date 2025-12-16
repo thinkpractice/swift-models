@@ -14,7 +14,7 @@
 
 import Benchmark
 import Datasets
-import TaylorTorch
+import Torch
 
 func runImageClassificationTraining<Model, ClassificationDataset>(
     model modelType: Model.Type,

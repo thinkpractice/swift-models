@@ -14,7 +14,7 @@
 
 // Implements the same architecture as https://github.com/tensorflow/minigo/blob/master/dual_net.py
 
-import TaylorTorch
+import Torch
 
 public struct ModelConfiguration {
     /// The size of the Go board (typically `9` or `19`).

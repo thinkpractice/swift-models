@@ -14,7 +14,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 /// Models that comply to Checkpointable can have their Tensors be written to and read from disk
 /// using the `writeCheckpoint(to:...)` and `readCheckpoint(from:...)` interfaces.

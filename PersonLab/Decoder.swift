@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Foundation
-import TaylorTorch
+import Torch
 
 // This whole struct should probably be merged into the PersonLab model struct when we no longer
 // need to do CPUTensor wrapping when SwiftRT fixes the GPU->CPU copy issue.

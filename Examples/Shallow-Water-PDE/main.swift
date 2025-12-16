@@ -16,7 +16,7 @@ import ArgumentParser
 import Benchmark
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 // MARK: Command line interface
 

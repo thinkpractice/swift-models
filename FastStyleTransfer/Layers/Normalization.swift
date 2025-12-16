@@ -1,4 +1,4 @@
-import TaylorTorch
+import Torch
 
 /// 2-D layer applying instance normalization over a mini-batch of inputs.
 ///

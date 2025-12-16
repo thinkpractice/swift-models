@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import PythonKit
-import TaylorTorch
+import Torch
 
 let iterationCount = 10000
 let learningPhase = iterationCount * 5 / 100

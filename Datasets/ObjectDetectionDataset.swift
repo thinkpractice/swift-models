@@ -14,7 +14,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 public struct LazyImage {
     public let width: Int

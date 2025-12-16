@@ -19,7 +19,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 /// The three variants of Imagenette, determined by their source image size.
 public enum ImagenetteSize {

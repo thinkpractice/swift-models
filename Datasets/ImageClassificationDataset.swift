@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import ModelSupport
-import TaylorTorch
+import Torch
 
 /// An image with a label.
 public typealias LabeledImage = LabeledData<Tensor<Float>, Tensor<Int32>>

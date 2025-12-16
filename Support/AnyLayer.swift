@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // TODO: Re-enable this for the stock toolchain when it can be realigned with VectorProtocol.
-import TaylorTorch
+import Torch
 import _Differentiation
 
 /// A helper that stops the program with an error when an erased derivative type does not

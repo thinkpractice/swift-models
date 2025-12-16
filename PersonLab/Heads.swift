@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Checkpoints
-import TaylorTorch
+import Torch
 
 public struct PersonlabHeadsResults: Differentiable {
   public var heatmap: Tensor<Float>

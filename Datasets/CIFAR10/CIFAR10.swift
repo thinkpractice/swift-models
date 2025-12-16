@@ -19,7 +19,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 public struct CIFAR10<Entropy: RandomNumberGenerator> {
     /// Type of the collection of non-collated batches.

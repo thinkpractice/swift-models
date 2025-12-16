@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import ArgumentParser
-import TaylorTorch
+import Torch
 
 struct FractalCommand: ParsableCommand {
     static var configuration = CommandConfiguration(

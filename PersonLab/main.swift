@@ -15,7 +15,7 @@
 import ArgumentParser
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 struct Inference: ParsableCommand {
     static var configuration = CommandConfiguration(

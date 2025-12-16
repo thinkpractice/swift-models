@@ -14,7 +14,7 @@
 
 import Datasets
 import ImageClassificationModels
-import TaylorTorch
+import Torch
 import TensorBoard
 import TrainingLoop
 

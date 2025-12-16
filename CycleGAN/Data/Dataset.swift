@@ -15,7 +15,7 @@
 import Datasets
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 public enum CycleGANDatasetVariant: String {
     case horse2zebra

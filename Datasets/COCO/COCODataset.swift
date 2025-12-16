@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Foundation
-import TaylorTorch
+import Torch
 
 public struct COCODataset<Entropy: RandomNumberGenerator> {
     /// Type of the collection of non-collated batches.

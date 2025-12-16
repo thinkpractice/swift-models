@@ -14,7 +14,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 public enum TextUnsupervisedVariant: String {
     /// - Source: [Einstein AI WikiText-103](

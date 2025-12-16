@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TaylorTorch
+import Torch
 
 /// A random `MCTSPredictor` predicting the next move and reward with random numbers.
 ///

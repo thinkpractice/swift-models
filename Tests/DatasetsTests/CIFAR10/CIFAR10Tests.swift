@@ -1,6 +1,6 @@
 import Datasets
 import Foundation
-import TaylorTorch
+import Torch
 import XCTest
 
 final class CIFAR10Tests: XCTestCase {

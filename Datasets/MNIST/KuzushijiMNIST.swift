@@ -17,7 +17,7 @@
 // adapted from "Kuzushiji Dataset" (created by NIJL and others), doi:10.20676/00000341
 
 import Foundation
-import TaylorTorch
+import Torch
 
 public struct KuzushijiMNIST<Entropy: RandomNumberGenerator> {
     /// Type of the collection of non-collated batches.

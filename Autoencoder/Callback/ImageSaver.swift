@@ -1,5 +1,5 @@
 import ModelSupport
-import TaylorTorch
+import Torch
 import TrainingLoop
 
 /// Returns a callback that saves images that `imageWidth` in width and `imageHeight` in height;

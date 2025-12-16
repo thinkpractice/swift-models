@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Foundation
-import TaylorTorch
+import Torch
 
 public struct Identity: ParameterlessLayer {
     public typealias TangentVector = EmptyTangentVector

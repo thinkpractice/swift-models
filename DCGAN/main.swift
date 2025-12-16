@@ -15,7 +15,7 @@
 import Datasets
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 let batchSize = 512
 let epochCount = 20

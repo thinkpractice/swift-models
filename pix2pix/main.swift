@@ -14,7 +14,7 @@
 
 import Datasets
 import Foundation
-import TaylorTorch
+import Torch
 import pix2pix
 
 let options = Options.parseOrExit()

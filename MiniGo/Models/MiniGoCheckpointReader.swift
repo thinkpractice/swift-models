@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Checkpoints
-import TaylorTorch
+import Torch
 
 public class MiniGoCheckpointReader: CheckpointReader {
     private var layerCounts: [String: Int] = [:]

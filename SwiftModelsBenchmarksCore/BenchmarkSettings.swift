@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Benchmark
-import TaylorTorch
+import Torch
 
 public struct BatchSize: BenchmarkSetting {
     var value: Int

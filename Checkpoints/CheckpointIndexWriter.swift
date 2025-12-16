@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Foundation
-import TaylorTorch
+import Torch
 
 class CheckpointIndexWriter {
     // TODO: Extend handling to different tensor types.

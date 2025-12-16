@@ -1,5 +1,5 @@
 import Checkpoints
-import TaylorTorch
+import Torch
 
 public protocol ImportableLayer: KeyPathIterable {}
 

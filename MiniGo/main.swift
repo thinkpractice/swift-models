@@ -15,7 +15,7 @@
 import Foundation
 import MiniGo
 import ModelSupport
-import TaylorTorch
+import Torch
 
 let boardSize = 19
 let simulationCountForOneMove = 40

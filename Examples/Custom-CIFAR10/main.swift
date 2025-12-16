@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Datasets
-import TaylorTorch
+import Torch
 
 let batchSize = 100
 

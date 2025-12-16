@@ -19,7 +19,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 public struct BostonHousing {
     public let trainPercentage: Float = 0.8

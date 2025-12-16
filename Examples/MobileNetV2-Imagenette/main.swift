@@ -14,7 +14,7 @@
 
 import Datasets
 import ImageClassificationModels
-import TaylorTorch
+import Torch
 import TrainingLoop
 
 // Until https://github.com/tensorflow/swift-apis/issues/993 is fixed, default to the eager-mode

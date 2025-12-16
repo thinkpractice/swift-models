@@ -14,7 +14,7 @@
 
 import ArgumentParser
 import ModelSupport
-import TaylorTorch
+import Torch
 
 struct ImageSize {
     let width: Int

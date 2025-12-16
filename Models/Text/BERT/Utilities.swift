@@ -14,7 +14,7 @@
 
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 
 public typealias Activation<Scalar: TensorFlowFloatingPoint> =
     @differentiable (Tensor<Scalar>) -> Tensor<Scalar>

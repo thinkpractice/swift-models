@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Foundation
-import TaylorTorch
+import Torch
 
 /// Returns a 3-D attention mask that correspond to the 2-D mask of the provided text batch.
 ///

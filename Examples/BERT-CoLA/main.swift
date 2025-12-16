@@ -15,7 +15,7 @@
 import Datasets
 import Foundation
 import ModelSupport
-import TaylorTorch
+import Torch
 import TextModels
 import TrainingLoop
 import x10_optimizers_optimizer
