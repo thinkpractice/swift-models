@@ -50,64 +50,68 @@ let package = Package(
             path: "Models/Text"),
         .target(name: "RecommendationModels", path: "Models/Recommendation"),
         .target(name: "TrainingLoop", dependencies: ["ModelSupport"], path: "TrainingLoop"),
-        .target(
+        .executableTarget(
             name: "Autoencoder1D",
             dependencies: ["Datasets", "ModelSupport", "TrainingLoop", "AutoencoderCallback"],
             path: "Autoencoder/Autoencoder1D"),
-        .target(
+        .executableTarget(
             name: "Autoencoder2D", dependencies: ["Datasets", "ModelSupport"],
             path: "Autoencoder/Autoencoder2D"),
-        .target(
+        .executableTarget(
             name: "VariationalAutoencoder1D", dependencies: ["Datasets", "ModelSupport"],
             path: "Autoencoder/VAE1D"),
         .target(
             name: "AutoencoderCallback", dependencies: ["ModelSupport", "TrainingLoop"],
             path: "Autoencoder/Callback"),
-        .target(name: "Catch", path: "Catch"),
-        .target(name: "Gym-FrozenLake", path: "Gym/FrozenLake"),
-        .target(name: "Gym-CartPole", path: "Gym/CartPole"),
-        .target(name: "Gym-Blackjack", path: "Gym/Blackjack"),
-        .target(name: "Gym-DQN", path: "Gym/DQN"),
-        .target(name: "Gym-PPO", path: "Gym/PPO"),
-        .target(
+        .executableTarget(name: "Catch", path: "Catch"),
+        .executableTarget(name: "Gym-FrozenLake", path: "Gym/FrozenLake"),
+        .executableTarget(name: "Gym-CartPole", path: "Gym/CartPole"),
+        .executableTarget(name: "Gym-Blackjack", path: "Gym/Blackjack"),
+        .executableTarget(name: "Gym-DQN", path: "Gym/DQN"),
+        .executableTarget(name: "Gym-PPO", path: "Gym/PPO"),
+        .executableTarget(
             name: "VGG-Imagewoof",
             dependencies: ["Datasets", "ImageClassificationModels", "TrainingLoop"],
             path: "Examples/VGG-Imagewoof"),
-        .target(
+        .executableTarget(
             name: "Regression-BostonHousing", dependencies: ["Datasets"],
             path: "Examples/Regression-BostonHousing"),
-        .target(
+        .executableTarget(
             name: "Custom-CIFAR10", dependencies: ["Datasets"],
             path: "Examples/Custom-CIFAR10"),
-        .target(
+        .executableTarget(
             name: "ResNet-CIFAR10",
             dependencies: ["Datasets", "ImageClassificationModels", "TrainingLoop"],
             path: "Examples/ResNet-CIFAR10"),
-        .target(
+        .executableTarget(
             name: "BigTransfer-CIFAR100",
             dependencies: ["Datasets", "ImageClassificationModels"],
             path: "Examples/BigTransfer-CIFAR100"),
-        .target(
+        .executableTarget(
             name: "Shallow-Water-PDE",
-            dependencies: ["ArgumentParser", "Benchmark", "ModelSupport"],
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Benchmark", package: "swift-benchmark"),
+                "ModelSupport"
+            ],
             path: "Examples/Shallow-Water-PDE"),
-        .target(
+        .executableTarget(
             name: "LeNet-MNIST",
             dependencies: ["Datasets", "ImageClassificationModels", "TrainingLoop"],
             path: "Examples/LeNet-MNIST"),
-        .target(
+        .executableTarget(
             name: "MobileNetV1-Imagenette",
             dependencies: ["Datasets", "ImageClassificationModels", "TrainingLoop"],
             path: "Examples/MobileNetV1-Imagenette"),
-        .target(
+        .executableTarget(
             name: "MobileNetV2-Imagenette",
             dependencies: ["Datasets", "ImageClassificationModels", "TrainingLoop"],
             path: "Examples/MobileNetV2-Imagenette"),
-        .target(
+        .executableTarget(
             name: "ResNet50-ImageNet",
             dependencies: ["Datasets", "ImageClassificationModels", "TrainingLoop", "TensorBoard"],
             path: "Examples/ResNet50-ImageNet"),
-        .target(
+        .executableTarget(
             name: "PersonLab",
             dependencies: [
                 "Checkpoints", "ModelSupport",
@@ -116,9 +120,9 @@ let package = Package(
             path: "PersonLab"),
         .target(
             name: "MiniGo", dependencies: ["Checkpoints"], path: "MiniGo", exclude: ["main.swift"]),
-        .target(
+        .executableTarget(
             name: "MiniGoDemo", dependencies: ["MiniGo"], path: "MiniGo", sources: ["main.swift"]),
-        .target(
+        .executableTarget(
             name: "NeuMF-MovieLens", dependencies: ["RecommendationModels", "Datasets"],
             path: "Examples/NeuMF-MovieLens"),
         .testTarget(name: "MiniGoTests", dependencies: ["MiniGo"]),
@@ -126,70 +130,91 @@ let package = Package(
         .testTarget(name: "VideoClassificationTests", dependencies: ["VideoClassificationModels"]),
         .testTarget(name: "RecommendationModelTests", dependencies: ["RecommendationModels"]),
         .testTarget(name: "DatasetsTests", dependencies: ["Datasets", "TextModels"]),
-        .target(
+        .executableTarget(
             name: "GPT2-Inference", dependencies: ["TextModels"],
             path: "Examples/GPT2-Inference",
             exclude: ["UI/Windows/main.swift", "UI/macOS/main.swift"]),
-        .target(
+        .executableTarget(
             name: "GPT2-WikiText2",
             dependencies: ["Datasets", "TextModels", "TrainingLoop", "TensorBoard"],
-            path: "Examples/GPT2-WikiText2",
-            exclude: ["UI/Windows/main.swift"]),
+            path: "Examples/GPT2-WikiText2"),
         .testTarget(name: "TextTests", dependencies: ["TextModels"]),
-        .target(name: "GAN", dependencies: ["Datasets", "ModelSupport"], path: "GAN"),
-        .target(name: "DCGAN", dependencies: ["Datasets", "ModelSupport"], path: "DCGAN"),
+        .executableTarget(name: "GAN", dependencies: ["Datasets", "ModelSupport"], path: "GAN"),
+        .executableTarget(name: "DCGAN", dependencies: ["Datasets", "ModelSupport"], path: "DCGAN"),
         .target(
             name: "FastStyleTransfer", dependencies: ["Checkpoints"], path: "FastStyleTransfer",
             exclude: ["Demo"]),
-        .target(
+        .executableTarget(
             name: "FastStyleTransferDemo", dependencies: ["FastStyleTransfer"],
             path: "FastStyleTransfer/Demo"),
         .testTarget(name: "FastStyleTransferTests", dependencies: ["FastStyleTransfer"]),
         .target(
             name: "SwiftModelsBenchmarksCore",
             dependencies: [
-                "Datasets", "ModelSupport", "ImageClassificationModels", "ArgumentParser",
-                "TextModels", "Benchmark",
+                "Datasets", "ModelSupport", "ImageClassificationModels",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "TextModels",
+                .product(name: "Benchmark", package: "swift-benchmark"),
             ],
             path: "SwiftModelsBenchmarksCore"),
-        .target(
+        .executableTarget(
             name: "SwiftModelsBenchmarks",
             dependencies: ["SwiftModelsBenchmarksCore"],
             path: "SwiftModelsBenchmarks"
         ),
         .testTarget(
             name: "CheckpointTests", dependencies: ["Checkpoints", "ImageClassificationModels"]),
-        .target(
+        .executableTarget(
             name: "BERT-CoLA", dependencies: ["TextModels", "Datasets", "TrainingLoop"],
             path: "Examples/BERT-CoLA"),
         .testTarget(name: "SupportTests", dependencies: ["ModelSupport"]),
-        .target(
+        .executableTarget(
             name: "CycleGAN",
-            dependencies: ["ArgumentParser", "ModelSupport", "Datasets"],
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "ModelSupport",
+                "Datasets"
+            ],
             path: "CycleGAN"
         ),
         .target(
             name: "pix2pix",
-            dependencies: ["ArgumentParser", "ModelSupport", "Datasets", "Checkpoints"],
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "ModelSupport",
+                "Datasets",
+                "Checkpoints"
+            ],
             path: "pix2pix",
             exclude: ["main.swift"]
         ),
-        .target(
+        .executableTarget(
             name: "pix2pixDemo", dependencies: ["pix2pix"], path: "pix2pix", sources: ["main.swift"]
         ),
-        .target(
+        .executableTarget(
             name: "WordSeg",
-            dependencies: ["ArgumentParser", "Datasets", "ModelSupport", "TextModels"],
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "Datasets",
+                "ModelSupport",
+                "TextModels"
+            ],
             path: "Examples/WordSeg"
         ),
-        .target(
+        .executableTarget(
             name: "Fractals",
-            dependencies: ["ArgumentParser", "ModelSupport"],
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "ModelSupport"
+            ],
             path: "Examples/Fractals"
         ),
-        .target(
+        .executableTarget(
             name: "GrowingNeuralCellularAutomata",
-            dependencies: ["ArgumentParser", "ModelSupport"],
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "ModelSupport"
+            ],
             path: "Examples/GrowingNeuralCellularAutomata"
         ),
     ]
