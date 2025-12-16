@@ -1,6 +1,7 @@
+import TaylorTorch
 import XCTest
+
 @testable import FastStyleTransfer
-import TensorFlow
 
 final class FastStyleTransferTests: XCTestCase {
     func testSanity() {
@@ -11,6 +12,6 @@ final class FastStyleTransferTests: XCTestCase {
     }
 
     static var allTests = [
-        ("testSanity", testSanity),
+        ("testSanity", testSanity)
     ]
 }

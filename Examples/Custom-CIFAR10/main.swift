@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Datasets
-import TensorFlow
+import TaylorTorch
 
 let batchSize = 100
 
@@ -50,7 +50,8 @@ for (epoch, epochBatches) in dataset.training.prefix(100).enumerated() {
         testBatchCount += 1
 
         let correctPredictions = logits.argmax(squeezingAxis: 1) .== labels
-        correctGuessCount = correctGuessCount
+        correctGuessCount =
+            correctGuessCount
             + Int(
                 Tensor<Int32>(correctPredictions).sum().scalarized())
         totalGuessCount = totalGuessCount + batchSize

@@ -16,7 +16,7 @@ import AutoencoderCallback
 import Datasets
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 import TrainingLoop
 
 let epochCount = 10
@@ -25,32 +25,32 @@ let imageHeight = 28
 let imageWidth = 28
 
 let dataset = FashionMNIST(
-  batchSize: batchSize, device: Device.default,
-  entropy: SystemRandomNumberGenerator(), flattening: true)
+    batchSize: batchSize, device: Device.default,
+    entropy: SystemRandomNumberGenerator(), flattening: true)
 
 // An autoencoder.
 var autoencoder = Sequential {
-  // The encoder.
-  Dense<Float>(inputSize: imageHeight * imageWidth, outputSize: 128, activation: relu)
-  Dense<Float>(inputSize: 128, outputSize: 64, activation: relu)
-  Dense<Float>(inputSize: 64, outputSize: 12, activation: relu)
-  Dense<Float>(inputSize: 12, outputSize: 3, activation: relu)
-  // The decoder.
-  Dense<Float>(inputSize: 3, outputSize: 12, activation: relu)
-  Dense<Float>(inputSize: 12, outputSize: 64, activation: relu)
-  Dense<Float>(inputSize: 64, outputSize: 128, activation: relu)
-  Dense<Float>(inputSize: 128, outputSize: imageHeight * imageWidth, activation: tanh)
+    // The encoder.
+    Dense<Float>(inputSize: imageHeight * imageWidth, outputSize: 128, activation: relu)
+    Dense<Float>(inputSize: 128, outputSize: 64, activation: relu)
+    Dense<Float>(inputSize: 64, outputSize: 12, activation: relu)
+    Dense<Float>(inputSize: 12, outputSize: 3, activation: relu)
+    // The decoder.
+    Dense<Float>(inputSize: 3, outputSize: 12, activation: relu)
+    Dense<Float>(inputSize: 12, outputSize: 64, activation: relu)
+    Dense<Float>(inputSize: 64, outputSize: 128, activation: relu)
+    Dense<Float>(inputSize: 128, outputSize: imageHeight * imageWidth, activation: tanh)
 }
 
 let optimizer = RMSProp(for: autoencoder)
 
 var trainingLoop = TrainingLoop(
-  training: dataset.training.map { $0.map { LabeledData(data: $0.data, label: $0.data) } },
-  validation: dataset.validation.map { LabeledData(data: $0.data, label: $0.data) },
-  optimizer: optimizer,
-  lossFunction: meanSquaredError,
-  callbacks: [
-    imageSaver(batchSize: batchSize, imageWidth: imageWidth, imageHeight: imageHeight)
-  ])
+    training: dataset.training.map { $0.map { LabeledData(data: $0.data, label: $0.data) } },
+    validation: dataset.validation.map { LabeledData(data: $0.data, label: $0.data) },
+    optimizer: optimizer,
+    lossFunction: meanSquaredError,
+    callbacks: [
+        imageSaver(batchSize: batchSize, imageWidth: imageWidth, imageHeight: imageHeight)
+    ])
 
 try! trainingLoop.fit(&autoencoder, epochs: epochCount, on: Device.default)

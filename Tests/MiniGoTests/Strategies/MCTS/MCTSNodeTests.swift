@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 import XCTest
 
 @testable import MiniGo
@@ -34,7 +34,7 @@ final class MCTSNodeTests: XCTestCase {
 
         // The final position has the highest prior.
         let action = node.actionByPUCT
-        XCTAssertEqual(.place(position: Position(x: boardSize-1, y: boardSize-1)), action)
+        XCTAssertEqual(.place(position: Position(x: boardSize - 1, y: boardSize - 1)), action)
     }
 
     func testSelectActionWithHighestPriorWithTieBreakForNewNode() {
@@ -104,8 +104,10 @@ extension MCTSNodeTests {
 extension MCTSNodeTests {
     static var allTests = [
         ("testSelectActionWithHighestPriorForNewNode", testSelectActionWithHighestPriorForNewNode),
-        ("testSelectActionWithHighestPriorWithTieBreakForNewNode",
-         testSelectActionWithHighestPriorWithTieBreakForNewNode),
+        (
+            "testSelectActionWithHighestPriorWithTieBreakForNewNode",
+            testSelectActionWithHighestPriorWithTieBreakForNewNode
+        ),
         ("testSelectActionAfterBackUpForSamePlayer", testSelectActionAfterBackUpForSamePlayer),
         ("testSelectActionAfterBackUpForOpponent", testSelectActionAfterBackUpForOpponent),
     ]

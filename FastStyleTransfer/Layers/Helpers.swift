@@ -1,4 +1,4 @@
-import TensorFlow
+import TaylorTorch
 
 /// A 2-D layer applying padding with reflection over a mini-batch.
 public struct ReflectionPad2D<Scalar: TensorFlowFloatingPoint>: ParameterlessLayer {

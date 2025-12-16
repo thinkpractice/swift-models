@@ -15,7 +15,7 @@
 import Benchmark
 import Datasets
 import ImageClassificationModels
-import TensorFlow
+import TaylorTorch
 
 let ResNetCIFAR10 = BenchmarkSuite(
   name: "ResNetCIFAR10",

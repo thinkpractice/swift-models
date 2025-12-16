@@ -1,6 +1,6 @@
 import Datasets
 import Foundation
-import TensorFlow
+import TaylorTorch
 import XCTest
 
 final class COCOVariantTests: XCTestCase {

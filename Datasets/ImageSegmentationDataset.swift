@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 /// An image with a label.
 public typealias SegmentedImage = LabeledData<Tensor<Float>, Tensor<Int32>>
@@ -21,23 +21,23 @@ public typealias SegmentedImage = LabeledData<Tensor<Float>, Tensor<Int32>>
 /// Types whose elements represent an image segmentation dataset (with both
 /// training and validation data).
 public protocol ImageSegmentationData {
-  /// The type of the training data, represented as a sequence of epochs, which
-  /// are collection of batches.
-  associatedtype Training: Sequence
-  where Training.Element: Collection, Training.Element.Element == SegmentedImage
-  /// The type of the validation data, represented as a collection of batches.
-  associatedtype Validation: Collection where Validation.Element == SegmentedImage
-  /// Creates an instance from a given `batchSize`.
-  init(batchSize: Int, on device: Device)
-  /// The `training` epochs.
-  var training: Training { get }
-  /// The `validation` batches.
-  var validation: Validation { get }
+    /// The type of the training data, represented as a sequence of epochs, which
+    /// are collection of batches.
+    associatedtype Training: Sequence
+    where Training.Element: Collection, Training.Element.Element == SegmentedImage
+    /// The type of the validation data, represented as a collection of batches.
+    associatedtype Validation: Collection where Validation.Element == SegmentedImage
+    /// Creates an instance from a given `batchSize`.
+    init(batchSize: Int, on device: Device)
+    /// The `training` epochs.
+    var training: Training { get }
+    /// The `validation` batches.
+    var validation: Validation { get }
 
-  // The following is probably going to be necessary since we can't extract that
-  // information from `Epochs` or `Batches`.
-  /// The number of samples in the `training` set.
-  //var trainingSampleCount: Int {get}
-  /// The number of samples in the `validation` set.
-  //var validationSampleCount: Int {get}
+    // The following is probably going to be necessary since we can't extract that
+    // information from `Epochs` or `Batches`.
+    /// The number of samples in the `training` set.
+    //var trainingSampleCount: Int {get}
+    /// The number of samples in the `validation` set.
+    //var validationSampleCount: Int {get}
 }

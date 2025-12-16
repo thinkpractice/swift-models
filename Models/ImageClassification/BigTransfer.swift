@@ -18,7 +18,7 @@
 // https://arxiv.org/abs/1912.11370
 
 import Foundation
-import TensorFlow
+import TaylorTorch
 import PythonKit
 
 let subprocess = Python.import("subprocess")

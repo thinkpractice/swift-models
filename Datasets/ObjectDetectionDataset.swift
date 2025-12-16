@@ -14,7 +14,7 @@
 
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 public struct LazyImage {
     public let width: Int
@@ -78,25 +78,25 @@ public struct ObjectDetectionExample: KeyPathIterable {
 /// Types whose elements represent an object detection dataset (with both
 /// training and validation data).
 public protocol ObjectDetectionData {
-  /// The type of the training data, represented as a sequence of epochs, which
-  /// are collection of batches.
-  associatedtype Training: Sequence
-  where Training.Element: Collection, Training.Element.Element == [ObjectDetectionExample]
-  /// The type of the validation data, represented as a collection of batches.
-  associatedtype Validation: Collection where Validation.Element == [ObjectDetectionExample]
-  /// Creates an instance from a given `batchSize`.
-  init(
-    training: COCO, validation: COCO, includeMasks: Bool, batchSize: Int, on device: Device,
-    transform: @escaping (ObjectDetectionExample) -> [ObjectDetectionExample])
-  /// The `training` epochs.
-  var training: Training { get }
-  /// The `validation` batches.
-  var validation: Validation { get }
+    /// The type of the training data, represented as a sequence of epochs, which
+    /// are collection of batches.
+    associatedtype Training: Sequence
+    where Training.Element: Collection, Training.Element.Element == [ObjectDetectionExample]
+    /// The type of the validation data, represented as a collection of batches.
+    associatedtype Validation: Collection where Validation.Element == [ObjectDetectionExample]
+    /// Creates an instance from a given `batchSize`.
+    init(
+        training: COCO, validation: COCO, includeMasks: Bool, batchSize: Int, on device: Device,
+        transform: @escaping (ObjectDetectionExample) -> [ObjectDetectionExample])
+    /// The `training` epochs.
+    var training: Training { get }
+    /// The `validation` batches.
+    var validation: Validation { get }
 
-  // The following is probably going to be necessary since we can't extract that
-  // information from `Epochs` or `Batches`.
-  /// The number of samples in the `training` set.
-  //var trainingSampleCount: Int {get}
-  /// The number of samples in the `validation` set.
-  //var validationSampleCount: Int {get}
+    // The following is probably going to be necessary since we can't extract that
+    // information from `Epochs` or `Batches`.
+    /// The number of samples in the `training` set.
+    //var trainingSampleCount: Int {get}
+    /// The number of samples in the `validation` set.
+    //var validationSampleCount: Int {get}
 }

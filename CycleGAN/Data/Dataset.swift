@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import Datasets
 import Foundation
 import ModelSupport
-import Datasets
-import TensorFlow
-
+import TaylorTorch
 
 public enum CycleGANDatasetVariant: String {
     case horse2zebra
@@ -24,8 +23,10 @@ public enum CycleGANDatasetVariant: String {
     public var url: URL {
         switch self {
         case .horse2zebra:
-            return URL(string: 
-                "https://people.eecs.berkeley.edu/~taesung_park/CycleGAN/datasets/horse2zebra.zip")!
+            return URL(
+                string:
+                    "https://people.eecs.berkeley.edu/~taesung_park/CycleGAN/datasets/horse2zebra.zip"
+            )!
         }
     }
 }
@@ -35,11 +36,11 @@ public struct CycleGANDataset<Entropy: RandomNumberGenerator> {
     public typealias Batches = Slices<Sampling<Samples, ArraySlice<Int>>>
     public typealias PairedImageBatch = (domainA: Tensor<Float>, domainB: Tensor<Float>)
     public typealias Training = LazyMapSequence<
-        TrainingEpochs<Samples, Entropy>, 
+        TrainingEpochs<Samples, Entropy>,
         LazyMapSequence<Batches, PairedImageBatch>
-      >
+    >
     public typealias Testing = LazyMapSequence<
-        Slices<Samples>, 
+        Slices<Samples>,
         PairedImageBatch
     >
 
@@ -50,27 +51,33 @@ public struct CycleGANDataset<Entropy: RandomNumberGenerator> {
 
     public init(
         from rootDirPath: String? = nil,
-        variant: CycleGANDatasetVariant? = nil, 
+        variant: CycleGANDatasetVariant? = nil,
         trainBatchSize: Int = 1,
         testBatchSize: Int = 1,
-        entropy: Entropy) throws {
-        
-        let rootDirPath = rootDirPath ?? CycleGANDataset.downloadIfNotPresent(
-            variant: variant ?? .horse2zebra,
-            to: DatasetUtilities.defaultDirectory.appendingPathComponent("CycleGAN", isDirectory: true))
+        entropy: Entropy
+    ) throws {
+
+        let rootDirPath =
+            rootDirPath
+            ?? CycleGANDataset.downloadIfNotPresent(
+                variant: variant ?? .horse2zebra,
+                to: DatasetUtilities.defaultDirectory.appendingPathComponent(
+                    "CycleGAN", isDirectory: true))
         let rootDirURL = URL(fileURLWithPath: rootDirPath, isDirectory: true)
-        
-        trainSamples = Array(zip(
-            try CycleGANDataset.loadSamples(from: rootDirURL.appendingPathComponent("trainA")), 
-            try CycleGANDataset.loadSamples(from: rootDirURL.appendingPathComponent("trainB"))))
-        
-        testSamples = Array(zip(
-            try CycleGANDataset.loadSamples(from: rootDirURL.appendingPathComponent("testA")), 
-            try CycleGANDataset.loadSamples(from: rootDirURL.appendingPathComponent("testB"))))
+
+        trainSamples = Array(
+            zip(
+                try CycleGANDataset.loadSamples(from: rootDirURL.appendingPathComponent("trainA")),
+                try CycleGANDataset.loadSamples(from: rootDirURL.appendingPathComponent("trainB"))))
+
+        testSamples = Array(
+            zip(
+                try CycleGANDataset.loadSamples(from: rootDirURL.appendingPathComponent("testA")),
+                try CycleGANDataset.loadSamples(from: rootDirURL.appendingPathComponent("testB"))))
 
         training = TrainingEpochs(
-            samples: trainSamples, 
-            batchSize: trainBatchSize, 
+            samples: trainSamples,
+            batchSize: trainBatchSize,
             entropy: entropy
         ).lazy.map { (batches: Batches) -> LazyMapSequence<Batches, PairedImageBatch> in
             batches.lazy.map {
@@ -91,8 +98,9 @@ public struct CycleGANDataset<Entropy: RandomNumberGenerator> {
     }
 
     private static func downloadIfNotPresent(
-            variant: CycleGANDatasetVariant,
-            to directory: URL) -> String {
+        variant: CycleGANDatasetVariant,
+        to directory: URL
+    ) -> String {
         let rootDirPath = directory.appendingPathComponent(variant.rawValue).path
 
         let directoryExists = FileManager.default.fileExists(atPath: rootDirPath)
@@ -101,9 +109,9 @@ public struct CycleGANDataset<Entropy: RandomNumberGenerator> {
         guard !directoryExists || directoryEmpty else { return rootDirPath }
 
         let _ = DatasetUtilities.downloadResource(
-            filename: variant.rawValue, 
+            filename: variant.rawValue,
             fileExtension: "zip",
-            remoteRoot: variant.url.deletingLastPathComponent(), 
+            remoteRoot: variant.url.deletingLastPathComponent(),
             localStorageDirectory: directory)
 
         return rootDirPath
@@ -114,7 +122,8 @@ public struct CycleGANDataset<Entropy: RandomNumberGenerator> {
             .contentsOfDirectory(
                 at: directory,
                 includingPropertiesForKeys: [.isDirectoryKey],
-                options: [.skipsHiddenFiles])
+                options: [.skipsHiddenFiles]
+            )
             .filter { $0.pathExtension == "jpg" }
             .map {
                 Image(contentsOf: $0).tensor / 127.5 - 1.0
@@ -125,7 +134,7 @@ public struct CycleGANDataset<Entropy: RandomNumberGenerator> {
 extension CycleGANDataset where Entropy == SystemRandomNumberGenerator {
     public init(
         from rootDirPath: String? = nil,
-        variant: CycleGANDatasetVariant? = nil, 
+        variant: CycleGANDatasetVariant? = nil,
         trainBatchSize: Int = 1,
         testBatchSize: Int = 1
     ) throws {
@@ -136,6 +145,5 @@ extension CycleGANDataset where Entropy == SystemRandomNumberGenerator {
             testBatchSize: testBatchSize,
             entropy: SystemRandomNumberGenerator()
         )
-  }
+    }
 }
-

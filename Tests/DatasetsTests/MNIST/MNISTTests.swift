@@ -1,13 +1,13 @@
-import TensorFlow
-import XCTest
 import Datasets
+import TaylorTorch
+import XCTest
 
 final class MNISTTests: XCTestCase {
     func testCreateMNIST() {
         let dataset = MNIST(batchSize: 1)
 
         var totalCount = 0
-        for epochBatches in dataset.training.prefix(1){ 
+        for epochBatches in dataset.training.prefix(1) {
             for batch in epochBatches {
                 XCTAssertTrue((0..<10).contains(batch.label[0].scalar!))
                 XCTAssertEqual(batch.data.shape, [1, 28, 28, 1])
@@ -21,7 +21,7 @@ final class MNISTTests: XCTestCase {
         let dataset = FashionMNIST(batchSize: 1)
 
         var totalCount = 0
-        for epochBatches in dataset.training.prefix(1){ 
+        for epochBatches in dataset.training.prefix(1) {
             for batch in epochBatches {
                 XCTAssertTrue((0..<10).contains(batch.label[0].scalar!))
                 XCTAssertEqual(batch.data.shape, [1, 28, 28, 1])
@@ -35,7 +35,7 @@ final class MNISTTests: XCTestCase {
         let dataset = KuzushijiMNIST(batchSize: 1)
 
         var totalCount = 0
-        for epochBatches in dataset.training.prefix(1){ 
+        for epochBatches in dataset.training.prefix(1) {
             for batch in epochBatches {
                 XCTAssertTrue((0..<10).contains(batch.label[0].scalar!))
                 XCTAssertEqual(batch.data.shape, [1, 28, 28, 1])
@@ -53,4 +53,3 @@ extension MNISTTests {
         ("testCreateKuzushijiMNIST", testCreateKuzushijiMNIST),
     ]
 }
-

@@ -12,20 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import XCTest
 import ModelSupport
-import TensorFlow
+import TaylorTorch
+import XCTest
 
-struct ElementaryFunctionsTests<WrapperTestType: XCTestCase, Reference: ElementaryFunctions, Test: ElementaryFunctions> {
+struct ElementaryFunctionsTests<
+    WrapperTestType: XCTestCase, Reference: ElementaryFunctions, Test: ElementaryFunctions
+> {
     let createReference: ([Float]) -> Reference
     let referenceToTest: (Reference) -> Test
-    let compareReferenceAndTest: (Reference, Test) -> ()
+    let compareReferenceAndTest: (Reference, Test) -> Void
     var rng: SystemRandomNumberGenerator
 
     public init(
         createReference: @escaping ([Float]) -> Reference,
         referenceToTest: @escaping (Reference) -> Test,
-        compareReferenceAndTest: @escaping (Reference, Test) -> (),
+        compareReferenceAndTest: @escaping (Reference, Test) -> Void,
         rng: SystemRandomNumberGenerator
     ) {
         self.createReference = createReference
@@ -57,14 +59,17 @@ struct ElementaryFunctionsTests<WrapperTestType: XCTestCase, Reference: Elementa
         ("root", -100.0...100.0, { Reference.root($0, 3) }, { Test.root($0, 3) }),
     ]
 
-    mutating func testFunction(range: ClosedRange<Float>, referenceOperator: (Reference) -> Reference, testOperator: (Test) -> Test) {
+    mutating func testFunction(
+        range: ClosedRange<Float>, referenceOperator: (Reference) -> Reference,
+        testOperator: (Test) -> Test
+    ) {
         let randomNumbers = (0..<10).map { _ in Float.random(in: range, using: &rng) }
         let reference = createReference(randomNumbers)
         let test = referenceToTest(reference)
 
         compareReferenceAndTest(referenceOperator(reference), testOperator(test))
     }
-    
+
     mutating func testAll() {
         for function in functions {
             testFunction(range: function.1, referenceOperator: function.2, testOperator: function.3)
@@ -77,26 +82,34 @@ final class AnyLayerTests: XCTestCase {
         var original = Dense<Float>(inputSize: 1, outputSize: 1)
         var erased = AnyLayer(original)
 
-        let originalGradient = gradient(at: original, in: { layer in
-            return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
-        })
+        let originalGradient = gradient(
+            at: original,
+            in: { layer in
+                return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
+            })
 
-        let erasedGradient = gradient(at: erased, in: { layer in
-            return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
-        })
+        let erasedGradient = gradient(
+            at: erased,
+            in: { layer in
+                return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
+            })
 
         XCTAssertEqual(originalGradient, erasedGradient.base as! Dense<Float>.TangentVector)
 
         original.move(along: originalGradient)
         erased.move(along: erasedGradient)
 
-        let originalGradient2 = gradient(at: original, in: { layer in
-            return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
-        })
+        let originalGradient2 = gradient(
+            at: original,
+            in: { layer in
+                return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
+            })
 
-        let erasedGradient2 = gradient(at: erased, in: { layer in
-            return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
-        })
+        let erasedGradient2 = gradient(
+            at: erased,
+            in: { layer in
+                return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
+            })
 
         XCTAssertEqual(originalGradient2, erasedGradient2.base as! Dense<Float>.TangentVector)
     }
@@ -105,17 +118,22 @@ final class AnyLayerTests: XCTestCase {
         let original = Dense<Float>(inputSize: 1, outputSize: 1)
         let erased = AnyLayer(original)
 
-        let originalGradient = gradient(at: original, in: { layer in
-            return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
-        })
+        let originalGradient = gradient(
+            at: original,
+            in: { layer in
+                return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
+            })
 
-        let anyLayerGradient = gradient(at: erased, in: { layer in
-            return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
-        })
+        let anyLayerGradient = gradient(
+            at: erased,
+            in: { layer in
+                return (layer(Tensor([[1.0]])) - Tensor([2.0])).squared().mean()
+            })
 
         let transformedOriginal = Dense<Float>.TangentVector.one + originalGradient
 
-        let transformedAny = AnyLayer<Tensor<Float>, Tensor<Float>>.TangentVector.one + anyLayerGradient
+        let transformedAny =
+            AnyLayer<Tensor<Float>, Tensor<Float>>.TangentVector.one + anyLayerGradient
 
         XCTAssertEqual(transformedOriginal, transformedAny.base as! Dense<Float>.TangentVector)
     }
@@ -128,33 +146,45 @@ final class AnyLayerTests: XCTestCase {
         // XCTAssertEqual(erased.zeroTangentVector, AnyLayerTangentVector(original.zeroTangentVector))
         // XCTAssertEqual(AnyLayerTangentVector(original.zeroTangentVector), erased.zeroTangentVector)
 
-        XCTAssertEqual(AnyLayerTangentVector.one, AnyLayerTangentVector(Dense<Float>.TangentVector.one))
-        XCTAssertEqual(AnyLayerTangentVector(Dense<Float>.TangentVector.one), AnyLayerTangentVector.one)
+        XCTAssertEqual(
+            AnyLayerTangentVector.one, AnyLayerTangentVector(Dense<Float>.TangentVector.one))
+        XCTAssertEqual(
+            AnyLayerTangentVector(Dense<Float>.TangentVector.one), AnyLayerTangentVector.one)
 
-        XCTAssertEqual(AnyLayerTangentVector.one.scaled(by: 2.0), AnyLayerTangentVector(Dense<Float>.TangentVector.one.scaled(by: 2.0)))
-        XCTAssertEqual(AnyLayerTangentVector(Dense<Float>.TangentVector.one.scaled(by: 2.0)), AnyLayerTangentVector.one.scaled(by: 2.0))
+        XCTAssertEqual(
+            AnyLayerTangentVector.one.scaled(by: 2.0),
+            AnyLayerTangentVector(Dense<Float>.TangentVector.one.scaled(by: 2.0)))
+        XCTAssertEqual(
+            AnyLayerTangentVector(Dense<Float>.TangentVector.one.scaled(by: 2.0)),
+            AnyLayerTangentVector.one.scaled(by: 2.0))
 
-        XCTAssertNotEqual(AnyLayerTangentVector.one, AnyLayerTangentVector(Dense<Float>.TangentVector.zero))
-        XCTAssertNotEqual(AnyLayerTangentVector(Dense<Float>.TangentVector.zero), AnyLayerTangentVector.one)
+        XCTAssertNotEqual(
+            AnyLayerTangentVector.one, AnyLayerTangentVector(Dense<Float>.TangentVector.zero))
+        XCTAssertNotEqual(
+            AnyLayerTangentVector(Dense<Float>.TangentVector.zero), AnyLayerTangentVector.one)
     }
 
     func testScalarTangentVectorBase() {
         XCTAssertEqual(AnyLayer<Tensor<Float>, Tensor<Float>>.TangentVector.zero.base as! Float, 0)
         XCTAssertEqual(AnyLayer<Tensor<Float>, Tensor<Float>>.TangentVector.one.base as! Float, 1)
-        XCTAssertEqual((AnyLayer<Tensor<Float>, Tensor<Float>>.TangentVector.one.scaled(by: 2)).base as! Float, 2)
+        XCTAssertEqual(
+            (AnyLayer<Tensor<Float>, Tensor<Float>>.TangentVector.one.scaled(by: 2)).base as! Float,
+            2)
     }
 
     func testTangentVectorElementaryFunctions() {
-        var generatedTests = ElementaryFunctionsTests<AnyLayerTests, Tensor<Float>, AnyLayerTangentVector>(
+        var generatedTests = ElementaryFunctionsTests<
+            AnyLayerTests, Tensor<Float>, AnyLayerTangentVector
+        >(
             createReference: { Tensor<Float>($0) },
             referenceToTest: { AnyLayerTangentVector($0) },
             compareReferenceAndTest: { XCTAssertEqual($0, $1.unboxed(as: Tensor<Float>.self)!) },
             rng: SystemRandomNumberGenerator()
         )
-        
+
         generatedTests.testAll()
     }
-    
+
     static var allTests = [
         ("testGradients", testGradients),
         ("testTangentOperations", testTangentOperations),

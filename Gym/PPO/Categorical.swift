@@ -12,111 +12,111 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 
 // Below code comes from eaplatanios/swift-rl:
 // https://github.com/eaplatanios/swift-rl/blob/master/Sources/ReinforcementLearning/Utilities/Protocols.swift
 public protocol Batchable {
-  func flattenedBatch(outerDimCount: Int) -> Self
-  func unflattenedBatch(outerDims: [Int]) -> Self
+    func flattenedBatch(outerDimCount: Int) -> Self
+    func unflattenedBatch(outerDims: [Int]) -> Self
 }
 
 public protocol DifferentiableBatchable: Batchable, Differentiable {
-  @differentiable(wrt: self)
-  func flattenedBatch(outerDimCount: Int) -> Self
+    @differentiable(wrt: self)
+    func flattenedBatch(outerDimCount: Int) -> Self
 
-  @differentiable(wrt: self)
-  func unflattenedBatch(outerDims: [Int]) -> Self
+    @differentiable(wrt: self)
+    func unflattenedBatch(outerDims: [Int]) -> Self
 }
 
 extension Tensor: Batchable {
-  public func flattenedBatch(outerDimCount: Int) -> Tensor {
-    if outerDimCount == 1 {
-      return self
+    public func flattenedBatch(outerDimCount: Int) -> Tensor {
+        if outerDimCount == 1 {
+            return self
+        }
+        var newShape = [-1]
+        for i in outerDimCount..<rank {
+            newShape.append(shape[i])
+        }
+        return reshaped(to: TensorShape(newShape))
     }
-    var newShape = [-1]
-    for i in outerDimCount..<rank {
-      newShape.append(shape[i])
-    }
-    return reshaped(to: TensorShape(newShape))
-  }
 
-  public func unflattenedBatch(outerDims: [Int]) -> Tensor {
-    if rank > 1 {
-      return reshaped(to: TensorShape(outerDims + shape.dimensions[1...]))
+    public func unflattenedBatch(outerDims: [Int]) -> Tensor {
+        if rank > 1 {
+            return reshaped(to: TensorShape(outerDims + shape.dimensions[1...]))
+        }
+        return reshaped(to: TensorShape(outerDims))
     }
-    return reshaped(to: TensorShape(outerDims))
-  }
 }
 
 extension Tensor: DifferentiableBatchable where Scalar: TensorFlowFloatingPoint {
-  @differentiable(wrt: self)
-  public func flattenedBatch(outerDimCount: Int) -> Tensor {
-    if outerDimCount == 1 {
-      return self
+    @differentiable(wrt: self)
+    public func flattenedBatch(outerDimCount: Int) -> Tensor {
+        if outerDimCount == 1 {
+            return self
+        }
+        var newShape = [-1]
+        for i in outerDimCount..<rank {
+            newShape.append(shape[i])
+        }
+        return reshaped(to: TensorShape(newShape))
     }
-    var newShape = [-1]
-    for i in outerDimCount..<rank {
-      newShape.append(shape[i])
-    }
-    return reshaped(to: TensorShape(newShape))
-  }
 
-  @differentiable(wrt: self)
-  public func unflattenedBatch(outerDims: [Int]) -> Tensor {
-    if rank > 1 {
-      return reshaped(to: TensorShape(outerDims + shape.dimensions[1...]))
+    @differentiable(wrt: self)
+    public func unflattenedBatch(outerDims: [Int]) -> Tensor {
+        if rank > 1 {
+            return reshaped(to: TensorShape(outerDims + shape.dimensions[1...]))
+        }
+        return reshaped(to: TensorShape(outerDims))
     }
-    return reshaped(to: TensorShape(outerDims))
-  }
 }
 
 // Below code comes from eaplatanios/swift-rl:
 // https://github.com/eaplatanios/swift-rl/blob/master/Sources/ReinforcementLearning/Distributions/Distribution.swift
 public protocol Distribution {
-  associatedtype Value
+    associatedtype Value
 
-  func entropy() -> Tensor<Float>
+    func entropy() -> Tensor<Float>
 
-  /// Returns a random sample drawn from this distribution.
-  func sample() -> Value
+    /// Returns a random sample drawn from this distribution.
+    func sample() -> Value
 }
 
 public protocol DifferentiableDistribution: Distribution, Differentiable {
-  @differentiable(wrt: self)
-  func entropy() -> Tensor<Float>
+    @differentiable(wrt: self)
+    func entropy() -> Tensor<Float>
 }
 
 // Below code comes from eaplatanios/swift-rl:
 // https://github.com/eaplatanios/swift-rl/blob/master/Sources/ReinforcementLearning/Distributions/Categorical.swift
 public struct Categorical<Scalar: TensorFlowIndex>: DifferentiableDistribution, KeyPathIterable {
-  /// Log-probabilities of this categorical distribution.
-  public var logProbabilities: Tensor<Float>
+    /// Log-probabilities of this categorical distribution.
+    public var logProbabilities: Tensor<Float>
 
-  @inlinable  
-  @differentiable(wrt: probabilities)
-  public init(probabilities: Tensor<Float>) {
-    self.logProbabilities = log(probabilities)
-  }
+    @inlinable
+    @differentiable(wrt: probabilities)
+    public init(probabilities: Tensor<Float>) {
+        self.logProbabilities = log(probabilities)
+    }
 
-  @inlinable
-  @differentiable(wrt: self)
-  public func entropy() -> Tensor<Float> {
-    -(logProbabilities * exp(logProbabilities)).sum(squeezingAxes: -1)
-  }
+    @inlinable
+    @differentiable(wrt: self)
+    public func entropy() -> Tensor<Float> {
+        -(logProbabilities * exp(logProbabilities)).sum(squeezingAxes: -1)
+    }
 
-  @inlinable
-  public func sample() -> Tensor<Scalar> {
-    let seed = Context.local.randomSeed
-    let outerDimCount = self.logProbabilities.rank - 1
-    let logProbabilities = self.logProbabilities.flattenedBatch(outerDimCount: outerDimCount)
-    let multinomial: Tensor<Scalar> = _Raw.multinomial(
-      logits: logProbabilities,
-      numSamples: Tensor<Int32>(1),
-      seed: Int64(seed.graph),
-      seed2: Int64(seed.op))
-    let flattenedSamples = multinomial.gathering(atIndices: Tensor<Int32>(0), alongAxis: 1)
-    return flattenedSamples.unflattenedBatch(
-      outerDims: [Int](self.logProbabilities.shape.dimensions[0..<outerDimCount]))
-  }
+    @inlinable
+    public func sample() -> Tensor<Scalar> {
+        let seed = Context.local.randomSeed
+        let outerDimCount = self.logProbabilities.rank - 1
+        let logProbabilities = self.logProbabilities.flattenedBatch(outerDimCount: outerDimCount)
+        let multinomial: Tensor<Scalar> = _Raw.multinomial(
+            logits: logProbabilities,
+            numSamples: Tensor<Int32>(1),
+            seed: Int64(seed.graph),
+            seed2: Int64(seed.op))
+        let flattenedSamples = multinomial.gathering(atIndices: Tensor<Int32>(0), alongAxis: 1)
+        return flattenedSamples.unflattenedBatch(
+            outerDims: [Int](self.logProbabilities.shape.dimensions[0..<outerDimCount]))
+    }
 }

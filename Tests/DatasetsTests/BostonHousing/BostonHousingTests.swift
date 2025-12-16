@@ -1,6 +1,6 @@
 import Datasets
 import Foundation
-import TensorFlow
+import TaylorTorch
 import XCTest
 
 final class BostonHousingTests: XCTestCase {
@@ -14,6 +14,6 @@ final class BostonHousingTests: XCTestCase {
 
 extension BostonHousingTests {
     static var allTests = [
-        ("testCreateBostonHousing", testCreateBostonHousing),
+        ("testCreateBostonHousing", testCreateBostonHousing)
     ]
 }

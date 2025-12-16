@@ -15,7 +15,7 @@
 import Checkpoints
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 public class GPT2 {
     public static let remoteCheckpoint: URL =
@@ -60,7 +60,7 @@ public class GPT2 {
             reader.isCRCVerificationEnabled = false
 
             storage = reader.localCheckpointLocation.deletingLastPathComponent()
-            
+
             // Load model configuration.
             let hparamsFile: URL = storage.appendingPathComponent("hparams.json")
             let configuration: (file: URL, data: Data) = try (

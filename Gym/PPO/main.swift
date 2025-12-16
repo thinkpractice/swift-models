@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import PythonKit
-import TensorFlow
+import TaylorTorch
 
 // Force unwrapping with `!` does not provide source location when unwrapping `nil`, so we instead
 // make a utility function for debuggability.
-fileprivate extension Optional {
-    func unwrapped(file: StaticString = #filePath, line: UInt = #line) -> Wrapped {
+extension Optional {
+    fileprivate func unwrapped(file: StaticString = #filePath, line: UInt = #line) -> Wrapped {
         guard let unwrapped = self else {
             fatalError("Value is nil", file: (file), line: line)
         }
@@ -31,7 +31,6 @@ fileprivate extension Optional {
 let np = Python.import("numpy")
 let gym = Python.import("gym")
 let plt = Python.import("matplotlib.pyplot")
-
 
 let env = gym.make("CartPole-v0")
 let observationSize: Int = Int(env.observation_space.shape[0])!
@@ -83,7 +82,7 @@ var timestep: Int = 0
 var episodeReturn: Float = 0
 var episodeReturns: [Float] = []
 var maxEpisodeReturn: Float = -1
-for episodeIndex in 1..<maxEpisodes+1 {
+for episodeIndex in 1..<maxEpisodes + 1 {
     var state = env.reset()
     var isDone: Bool
     var reward: Float

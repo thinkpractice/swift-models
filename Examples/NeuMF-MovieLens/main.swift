@@ -15,7 +15,7 @@
 import Datasets
 import Foundation
 import RecommendationModels
-import TensorFlow
+import TaylorTorch
 
 let dataset = MovieLens(trainBatchSize: 1024)
 let numUsers = dataset.numUsers
@@ -25,7 +25,8 @@ let size: [Int] = [16, 32, 16, 8]
 let regs: [Float] = [0.0, 0.0, 0.0, 0.0]
 
 var model = NeuMF(
-    numUsers: numUsers, numItems: numItems, numLatentFeatures: 8, matrixRegularization: 0.0, mlpLayerSizes: size,
+    numUsers: numUsers, numItems: numItems, numLatentFeatures: 8, matrixRegularization: 0.0,
+    mlpLayerSizes: size,
     mlpRegularizations: regs)
 let optimizer = Adam(for: model, learningRate: 0.001)
 var itemCount = Dictionary(

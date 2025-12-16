@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Datasets
-import TensorFlow
+import TaylorTorch
 import TextModels
 import TensorBoard
 import TrainingLoop

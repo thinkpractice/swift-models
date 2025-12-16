@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 
 /// MLP is a multi-layer perceptron and is used as a component of the DLRM model
 public struct MLP: Layer {

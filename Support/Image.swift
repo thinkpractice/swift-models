@@ -14,7 +14,7 @@
 
 import Foundation
 @_implementationOnly import STBImage
-import TensorFlow
+import TaylorTorch
 
 /// A high-level representation of an image, encapsulating common image saving, loading, and
 /// manipulation operations. The loading and saving functionality is inspired by
@@ -43,8 +43,8 @@ public struct Image {
     /// provides a unified means of extracting a floating-point tensor from that storage.
     public var tensor: Tensor<Float> {
         switch self.imageData {
-        case let .float(data): return data
-        case let .uint8(data): return Tensor<Float>(data)
+        case .float(let data): return data
+        case .uint8(let data): return Tensor<Float>(data)
         }
     }
 
@@ -75,7 +75,7 @@ public struct Image {
                 // TODO: Proper error propagation for this.
                 fatalError("File does not exist at: \(url.path).")
             }
-            
+
             var width: Int32 = 0
             var height: Int32 = 0
             var bpp: Int32 = 0
@@ -102,18 +102,18 @@ public struct Image {
     public func save(to url: URL, format: Format = .jpeg(quality: 95)) {
         let outputImageData: Tensor<UInt8>
         switch self.imageData {
-        case let .uint8(data):
+        case .uint8(let data):
             outputImageData = data
-        case let .float(data):
+        case .float(let data):
             outputImageData = Tensor<UInt8>(data.clipped(min: 0, max: 255))
         }
         let bpp: Int32 = Int32(outputImageData.shape[2])
-        
+
         let height = Int32(outputImageData.shape[0])
         let width = Int32(outputImageData.shape[1])
         outputImageData.scalars.withUnsafeBufferPointer { bytes in
             switch format {
-            case let .jpeg(quality):
+            case .jpeg(let quality):
                 let status = stbi_write_jpg(
                     url.path, width, height, bpp, bytes.baseAddress!, Int32(round(quality)))
                 guard status != 0 else {
@@ -136,15 +136,15 @@ public struct Image {
     ///   - size: A tuple representing the width, height of the resulting image.
     public func resized(to size: (Int, Int)) -> Image {
         switch self.imageData {
-        case let .uint8(data):
+        case .uint8(let data):
             let resizedImage = resize(images: Tensor<Float>(data), size: size, method: .bilinear)
             return Image(Tensor<UInt8>(resizedImage))
-        case let .float(data):
+        case .float(let data):
             let resizedImage = resize(images: data, size: size, method: .bilinear)
             return Image(resizedImage)
         }
     }
-  
+
     func premultiply(_ input: Tensor<Float>) -> Tensor<Float> {
         let alphaChannel = input.slice(
             lowerBounds: [0, 0, 3], sizes: [input.shape[0], input.shape[1], 1])
@@ -153,110 +153,110 @@ public struct Image {
         let adjustedColorComponents = colorComponents * alphaChannel / 255.0
         return Tensor(concatenating: [adjustedColorComponents, alphaChannel], alongAxis: 2)
     }
-    
+
     /// Returns a version of this image with premultiplied alpha.
     public func premultipliedAlpha() -> Image {
         switch self.imageData {
-        case let .uint8(data):
+        case .uint8(let data):
             guard data.shape[2] == 4 else { return self }
             return Image(premultiply(Tensor<Float>(data)))
-        case let .float(data):
+        case .float(let data):
             guard data.shape[2] == 4 else { return self }
             return Image(premultiply(data))
         }
     }
 }
 
-public extension Tensor where Scalar == Float {
-  /// Saves the tensor as a still image file. This must be a rank-3 tensor, with channels in the
-  /// 0.0 - 255.0 range.
-  /// - Parameters:
-  ///   - directory: The target directory to host the image file. If it does not exist, it
-  ///     will be created.
-  ///   - name: The name of the resulting image file, without extension.
-  ///   - format: The file format, with associated parameters. The default is a JPEG at 95% quality.
-  func saveImage(
-    directory: String, name: String, format: Image.Format = .jpeg(quality: 95)
-  ) throws {
-    precondition(self.rank == 3)
-    try createDirectoryIfMissing(at: directory)
-    
-    let fileExtension: String
-    switch format {
-    case .jpeg: fileExtension = "jpg"
-    case .png: fileExtension = "png"
+extension Tensor where Scalar == Float {
+    /// Saves the tensor as a still image file. This must be a rank-3 tensor, with channels in the
+    /// 0.0 - 255.0 range.
+    /// - Parameters:
+    ///   - directory: The target directory to host the image file. If it does not exist, it
+    ///     will be created.
+    ///   - name: The name of the resulting image file, without extension.
+    ///   - format: The file format, with associated parameters. The default is a JPEG at 95% quality.
+    public func saveImage(
+        directory: String, name: String, format: Image.Format = .jpeg(quality: 95)
+    ) throws {
+        precondition(self.rank == 3)
+        try createDirectoryIfMissing(at: directory)
+
+        let fileExtension: String
+        switch format {
+        case .jpeg: fileExtension = "jpg"
+        case .png: fileExtension = "png"
+        }
+
+        let outputURL = URL(fileURLWithPath: "\(directory)/\(name).\(fileExtension)")
+        let image = Image(self)
+        image.save(to: outputURL, format: format)
     }
-    
-    let outputURL = URL(fileURLWithPath: "\(directory)/\(name).\(fileExtension)")
-    let image = Image(self)
-    image.save(to: outputURL, format: format)
-  }
-  
-  /// Treats the tensor as an image and overlays it on a white background. This must be a rank-3
-  /// tensor, with channels in the 0.0 - 255.0 range. Also, it assumes that the image uses
-  /// premultiplied alpha.
-  func overlaidOnWhite() -> Tensor {
-    precondition(self.rank == 3)
-    precondition(self.shape[2] == 4)
-    let alphaChannel = self.slice(
-        lowerBounds: [0, 0, 3], sizes: [self.shape[0], self.shape[1], 1])
-    let colorComponents = self.slice(
-        lowerBounds: [0, 0, 0], sizes: [self.shape[0], self.shape[1], 3])
-    return (255.0 - alphaChannel) + colorComponents
-  }
-  
-  /// Treats the tensor as a grayscale image and normalizes it to a 0.0 - 255.0 range. This must be
-  /// a rank-1 or rank-2 tensor. The minimum and maximum channel values are remapped to 0.0 and
-  /// 255.0, respectively, and all values rescaled to that range.
-  func normalizedToGrayscale() -> Tensor {
-    let lowerBound = self.min(alongAxes: [0, 1])
-    let upperBound = self.max(alongAxes: [0, 1])
-    return (self - lowerBound) * (255.0 / (upperBound - lowerBound))
-  }
+
+    /// Treats the tensor as an image and overlays it on a white background. This must be a rank-3
+    /// tensor, with channels in the 0.0 - 255.0 range. Also, it assumes that the image uses
+    /// premultiplied alpha.
+    public func overlaidOnWhite() -> Tensor {
+        precondition(self.rank == 3)
+        precondition(self.shape[2] == 4)
+        let alphaChannel = self.slice(
+            lowerBounds: [0, 0, 3], sizes: [self.shape[0], self.shape[1], 1])
+        let colorComponents = self.slice(
+            lowerBounds: [0, 0, 0], sizes: [self.shape[0], self.shape[1], 3])
+        return (255.0 - alphaChannel) + colorComponents
+    }
+
+    /// Treats the tensor as a grayscale image and normalizes it to a 0.0 - 255.0 range. This must be
+    /// a rank-1 or rank-2 tensor. The minimum and maximum channel values are remapped to 0.0 and
+    /// 255.0, respectively, and all values rescaled to that range.
+    public func normalizedToGrayscale() -> Tensor {
+        let lowerBound = self.min(alongAxes: [0, 1])
+        let upperBound = self.max(alongAxes: [0, 1])
+        return (self - lowerBound) * (255.0 / (upperBound - lowerBound))
+    }
 }
 
 public typealias Point = (x: Int, y: Int)
 
 /// Draw line using Bresenham's line drawing algorithm
 public func drawLine(
-  on imageTensor: inout Tensor<Float>,
-  from pt1: Point,
-  to pt2: Point,
-  color: (r: Float, g: Float, b: Float) = (255.0, 255.0, 255.0)
+    on imageTensor: inout Tensor<Float>,
+    from pt1: Point,
+    to pt2: Point,
+    color: (r: Float, g: Float, b: Float) = (255.0, 255.0, 255.0)
 ) {
-  var pt1 = pt1
-  var pt2 = pt2
-  let colorTensor = Tensor<Float>([color.r, color.g, color.b])
+    var pt1 = pt1
+    var pt2 = pt2
+    let colorTensor = Tensor<Float>([color.r, color.g, color.b])
 
-  // Rearrange points for current octant
-  let steep = abs(pt2.y - pt1.y) > abs(pt2.x - pt1.x)
-  if steep {
-      pt1 = Point(x: pt1.y, y: pt1.x)
-      pt2 = Point(x: pt2.y, y: pt2.x)
-  }
-  if pt2.x < pt1.x {
-      (pt1, pt2) = (pt2, pt1)
-  }
-
-  // Handle rearranged points
-  let dX = pt2.x - pt1.x
-  let dY = pt2.y - pt1.y
-  let slope = abs(Float(dY) / Float(dX))
-  let yStep = dY >= 0 ? 1 : -1
-
-  var error: Float = 0
-  var currentY = pt1.y
-  for currentX in pt1.x...pt2.x {
-    let xIndex = steep ? currentY : currentX
-    let yIndex = steep ? currentX : currentY
-    if xIndex >= imageTensor.shape[1] || yIndex >= imageTensor.shape[0] {
-      break
+    // Rearrange points for current octant
+    let steep = abs(pt2.y - pt1.y) > abs(pt2.x - pt1.x)
+    if steep {
+        pt1 = Point(x: pt1.y, y: pt1.x)
+        pt2 = Point(x: pt2.y, y: pt2.x)
     }
-    imageTensor[yIndex, xIndex] = colorTensor
-    error += slope
-    if error >= 0.5 {
-        currentY += yStep
-        error -= 1
+    if pt2.x < pt1.x {
+        (pt1, pt2) = (pt2, pt1)
     }
-  }
+
+    // Handle rearranged points
+    let dX = pt2.x - pt1.x
+    let dY = pt2.y - pt1.y
+    let slope = abs(Float(dY) / Float(dX))
+    let yStep = dY >= 0 ? 1 : -1
+
+    var error: Float = 0
+    var currentY = pt1.y
+    for currentX in pt1.x...pt2.x {
+        let xIndex = steep ? currentY : currentX
+        let yIndex = steep ? currentX : currentY
+        if xIndex >= imageTensor.shape[1] || yIndex >= imageTensor.shape[0] {
+            break
+        }
+        imageTensor[yIndex, xIndex] = colorTensor
+        error += slope
+        if error >= 0.5 {
+            currentY += yStep
+            error -= 1
+        }
+    }
 }

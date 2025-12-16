@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import ImageClassificationModels
+import TaylorTorch
 import XCTest
 
 @testable import Checkpoints
-import ImageClassificationModels
 
 extension LeNet: Checkpointable {}
 
 extension SqueezeNetV1_0: Checkpointable {
     public var checkpointSeparator: String {
-      return "_"
+        return "_"
     }
 }
 
@@ -78,12 +78,12 @@ final class CheckpointWriterTests: XCTestCase {
             XCTFail("Checkpoint writing / reading failed with error: \(error).")
         }
     }
-    
+
     func testLeNetCheckpointing() {
         do {
             let model = LeNet()
             try model.writeCheckpoint(to: temporaryDirectory, name: "LeNet")
-            
+
             let reader = try CheckpointReader(
                 checkpointLocation: temporaryDirectory.appendingPathComponent("LeNet"),
                 modelName: "LeNet", additionalFiles: [])
@@ -93,10 +93,10 @@ final class CheckpointWriterTests: XCTestCase {
             XCTAssertEqual(loadedTensor1.shape, [5, 5, 6, 16])
             let loadedTensor2: ShapedArray<Float> = reader.loadTensor(named: "fc2/bias")
             XCTAssertEqual(loadedTensor2.shape, [84])
-          
+
             var newModel = LeNet()
             try newModel.readCheckpoint(
-              from: temporaryDirectory.appendingPathComponent("LeNet"), name: "LeNet")
+                from: temporaryDirectory.appendingPathComponent("LeNet"), name: "LeNet")
         } catch {
             XCTFail("LeNet checkpoint writing / reading failed with error: \(error).")
         }
@@ -106,7 +106,7 @@ final class CheckpointWriterTests: XCTestCase {
         do {
             let model = SqueezeNetV1_0(classCount: 1000)
             try model.writeCheckpoint(to: temporaryDirectory, name: "SqueezeNet")
-            
+
             let reader = try CheckpointReader(
                 checkpointLocation: temporaryDirectory.appendingPathComponent("SqueezeNet"),
                 modelName: "SqueezeNet", additionalFiles: [])
@@ -119,7 +119,7 @@ final class CheckpointWriterTests: XCTestCase {
 
             var newModel = SqueezeNetV1_0(classCount: 1000)
             try newModel.readCheckpoint(
-              from: temporaryDirectory.appendingPathComponent("SqueezeNet"), name: "SqueezeNet")
+                from: temporaryDirectory.appendingPathComponent("SqueezeNet"), name: "SqueezeNet")
         } catch {
             XCTFail("SqueezeNet checkpoint writing / reading failed with error: \(error).")
         }

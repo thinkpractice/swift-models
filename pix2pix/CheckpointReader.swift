@@ -15,7 +15,7 @@
 import Checkpoints
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 public struct NetGConfig: Codable {
     public let inChannels: Int
@@ -27,7 +27,7 @@ public struct NetGConfig: Codable {
     public let beta: Float
     public let padding: Int?
     public let kernelSize: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case inChannels = "i_channels"
         case outChannels = "o_channels"
@@ -60,7 +60,10 @@ protocol InitializableFromPythonCheckpoint2 {
 }
 
 protocol InitializableFromPythonCheckpoint3 {
-    associatedtype Sublayer: Layer where Sublayer.TangentVector.VectorSpaceScalar == Float, Sublayer.Input == Tensor<Float>, Sublayer.Output == Tensor<Float> 
+    associatedtype Sublayer: Layer
+    where
+        Sublayer.TangentVector.VectorSpaceScalar == Float, Sublayer.Input == Tensor<Float>,
+        Sublayer.Output == Tensor<Float>
     init(reader: CheckpointReader, config: NetGConfig, scope: String, submodule: Sublayer)
 }
 
@@ -68,7 +71,7 @@ extension ConvLayer: InitializableFromPythonCheckpoint2 {
     init(reader: CheckpointReader, config: NetGConfig, scope: String) {
         conv2d = Conv2D<Float>(reader: reader, config: config, scope: scope + "/conv2d")
         let padding = config.padding
-        let _padding =  padding ?? Int(config.kernelSize / 2)
+        let _padding = padding ?? Int(config.kernelSize / 2)
         pad = ZeroPadding2D(padding: ((_padding, _padding), (_padding, _padding)))
     }
 }
@@ -78,7 +81,7 @@ extension Conv2D: InitializableFromPythonCheckpoint2 {
         let filter: Tensor<Scalar> = reader.readTensor(name: scope + "/fil")
         let bias: Tensor<Scalar> = reader.readTensor(name: scope + "/bias")
         // TODO: read/write activation, strides, padding, and dialations from checkpoint file
-        self.init(filter: filter, bias: bias, strides: (2,2), padding: .same)
+        self.init(filter: filter, bias: bias, strides: (2, 2), padding: .same)
     }
 }
 
@@ -98,7 +101,9 @@ extension BatchNorm: InitializableFromPythonCheckpoint2 {
         let scale: Tensor<Scalar> = reader.readTensor(name: scope + "/sc")
         let runningMean: Tensor<Scalar> = reader.readTensor(name: scope + "/rmean")
         let runningVariance: Tensor<Scalar> = reader.readTensor(name: scope + "/rvar")
-        self.init(axis: axisVal, momentum: momentumVal, offset: offset, scale: scale, epsilon: epsilonVal, runningMean: runningMean, runningVariance: runningVariance)
+        self.init(
+            axis: axisVal, momentum: momentumVal, offset: offset, scale: scale, epsilon: epsilonVal,
+            runningMean: runningMean, runningVariance: runningVariance)
     }
 }
 
@@ -107,15 +112,17 @@ extension TransposedConv2D: InitializableFromPythonCheckpoint2 {
         let filter: Tensor<Scalar> = reader.readTensor(name: scope + "/fil")
         let bias: Tensor<Scalar> = reader.readTensor(name: scope + "/bias")
         // TODO: read/write activation, strides, and padding from checkpoint file
-        self.init(filter: filter, bias: bias, strides: (2,2), padding: .same)
+        self.init(filter: filter, bias: bias, strides: (2, 2), padding: .same)
     }
 }
 
 extension UNetSkipConnectionInnermost: InitializableFromPythonCheckpoint2 {
     init(reader: CheckpointReader, config: NetGConfig, scope: String) {
         let downConv: Conv2D<Float> = Conv2D(reader: reader, config: config, scope: scope + "/dc")
-        let upNorm: BatchNorm<Float> = BatchNorm(reader: reader, config: config, scope: scope + "/un")
-        let upConv: TransposedConv2D<Float> = TransposedConv2D(reader: reader, config: config, scope: scope + "/uc")
+        let upNorm: BatchNorm<Float> = BatchNorm(
+            reader: reader, config: config, scope: scope + "/un")
+        let upConv: TransposedConv2D<Float> = TransposedConv2D(
+            reader: reader, config: config, scope: scope + "/uc")
         self.init(downConv: downConv, upConv: upConv, upNorm: upNorm)
     }
 }
@@ -123,25 +130,32 @@ extension UNetSkipConnectionInnermost: InitializableFromPythonCheckpoint2 {
 extension UNetSkipConnection: InitializableFromPythonCheckpoint3 {
     init(reader: CheckpointReader, config: NetGConfig, scope: String, submodule: Sublayer) {
         let downConv: Conv2D<Float> = Conv2D(reader: reader, config: config, scope: scope + "/dc")
-        let downNorm: BatchNorm<Float> = BatchNorm(reader: reader, config: config, scope: scope + "/dn")
-        let upConv: TransposedConv2D<Float> = TransposedConv2D(reader: reader, config: config, scope: scope + "/uc")
-        let upNorm: BatchNorm<Float> = BatchNorm(reader: reader, config: config, scope: scope + "/un")
-        let dropOut: Dropout<Float> = Dropout(reader: reader, config: config, scope: scope + "/drop")
-        self.init(downConv: downConv, downNorm: downNorm, upConv: upConv, upNorm: upNorm, dropOut: dropOut, submodule: submodule)
+        let downNorm: BatchNorm<Float> = BatchNorm(
+            reader: reader, config: config, scope: scope + "/dn")
+        let upConv: TransposedConv2D<Float> = TransposedConv2D(
+            reader: reader, config: config, scope: scope + "/uc")
+        let upNorm: BatchNorm<Float> = BatchNorm(
+            reader: reader, config: config, scope: scope + "/un")
+        let dropOut: Dropout<Float> = Dropout(
+            reader: reader, config: config, scope: scope + "/drop")
+        self.init(
+            downConv: downConv, downNorm: downNorm, upConv: upConv, upNorm: upNorm,
+            dropOut: dropOut, submodule: submodule)
     }
 }
 
 extension UNetSkipConnectionOutermost: InitializableFromPythonCheckpoint3 {
     init(reader: CheckpointReader, config: NetGConfig, scope: String, submodule: Sublayer) {
         let downConv: Conv2D<Float> = Conv2D(reader: reader, config: config, scope: scope + "/dc")
-        let upConv: TransposedConv2D<Float> = TransposedConv2D(reader: reader, config: config, scope: scope + "/uc")
+        let upConv: TransposedConv2D<Float> = TransposedConv2D(
+            reader: reader, config: config, scope: scope + "/uc")
         self.init(downConv: downConv, upConv: upConv, submodule: submodule)
     }
 }
 
 extension Dropout: InitializableFromPythonCheckpoint2 {
     init(reader: CheckpointReader, config: NetGConfig, scope: String) {
-        let probability:Tensor<Float> = reader.readTensor(name: scope + "/prob")
+        let probability: Tensor<Float> = reader.readTensor(name: scope + "/prob")
         let val = probability[0].scalar
         self.init(probability: Double(val!))
     }
@@ -149,14 +163,55 @@ extension Dropout: InitializableFromPythonCheckpoint2 {
 
 extension NetG: InitializableFromPythonCheckpoint2 {
     public init(reader: CheckpointReader, config: NetGConfig, scope: String) {
-        let firstBlock = UNetSkipConnectionInnermost(reader: reader, config: config, scope: scope + "/module/submod/submod/submod/submod/submod/submod/submod")
-        let module1 = UNetSkipConnection<UNetSkipConnectionInnermost>(reader: reader, config: config, scope: scope + "/module/submod/submod/submod/submod/submod/submod", submodule: firstBlock)
-        let module2 = UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>(reader: reader, config: config, scope: scope + "/module/submod/submod/submod/submod/submod", submodule: module1)
-        let module3 = UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>>(reader: reader, config: config, scope: scope + "/module/submod/submod/submod/submod", submodule: module2)
-        let module4 = UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>>>(reader: reader, config: config, scope: scope + "/module/submod/submod/submod", submodule: module3)
-        let module5 = UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>>>>(reader: reader, config: config, scope: scope + "/module/submod/submod", submodule: module4)
-        let module6 = UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>>>>>(reader: reader, config: config, scope: scope + "/module/submod", submodule: module5)
-        self.module = UNetSkipConnectionOutermost<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>>>>>>(reader: reader, config: config, scope: scope + "/module", submodule: module6)
+        let firstBlock = UNetSkipConnectionInnermost(
+            reader: reader, config: config,
+            scope: scope + "/module/submod/submod/submod/submod/submod/submod/submod")
+        let module1 = UNetSkipConnection<UNetSkipConnectionInnermost>(
+            reader: reader, config: config,
+            scope: scope + "/module/submod/submod/submod/submod/submod/submod",
+            submodule: firstBlock)
+        let module2 = UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>(
+            reader: reader, config: config,
+            scope: scope + "/module/submod/submod/submod/submod/submod", submodule: module1)
+        let module3 = UNetSkipConnection<
+            UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>
+        >(
+            reader: reader, config: config, scope: scope + "/module/submod/submod/submod/submod",
+            submodule: module2)
+        let module4 = UNetSkipConnection<
+            UNetSkipConnection<UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>>
+        >(
+            reader: reader, config: config, scope: scope + "/module/submod/submod/submod",
+            submodule: module3)
+        let module5 = UNetSkipConnection<
+            UNetSkipConnection<
+                UNetSkipConnection<
+                    UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>
+                >
+            >
+        >(
+            reader: reader, config: config, scope: scope + "/module/submod/submod",
+            submodule: module4)
+        let module6 = UNetSkipConnection<
+            UNetSkipConnection<
+                UNetSkipConnection<
+                    UNetSkipConnection<
+                        UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>
+                    >
+                >
+            >
+        >(reader: reader, config: config, scope: scope + "/module/submod", submodule: module5)
+        self.module = UNetSkipConnectionOutermost<
+            UNetSkipConnection<
+                UNetSkipConnection<
+                    UNetSkipConnection<
+                        UNetSkipConnection<
+                            UNetSkipConnection<UNetSkipConnection<UNetSkipConnectionInnermost>>
+                        >
+                    >
+                >
+            >
+        >(reader: reader, config: config, scope: scope + "/module", submodule: module6)
         module.submodule = module6
     }
 }
@@ -182,7 +237,7 @@ extension NetD: InitializableFromPythonCheckpoint2 {
             bn2
             fn3
         }
-          
+
         let module2 = Sequential {
             module
             ConvLayer(reader: reader, config: config, scope: scope + "convLayer1")
@@ -190,7 +245,7 @@ extension NetD: InitializableFromPythonCheckpoint2 {
             Function<Tensor<Float>, Tensor<Float>> { leakyRelu($0) }
             ConvLayer(reader: reader, config: config, scope: scope + "convLayer2")
         }
-        
+
         self.module = module2
     }
 }

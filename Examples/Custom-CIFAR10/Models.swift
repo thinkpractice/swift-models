@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 
 // Ported from pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
 struct PyTorchModel: Layer {

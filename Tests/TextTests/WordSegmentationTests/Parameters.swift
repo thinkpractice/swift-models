@@ -12,35 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 
 struct SNLMParameters {
-  var emb_enc: EmbeddingParameters
-  var lstm_enc: LSTMParameters
-  var mlp_interpolation: MLPParameters
-  var mlp_memory: MLPParameters
-  var emb_dec: EmbeddingParameters
-  var lstm_dec: LSTMParameters
-  var linear_dec: LinearParameters
+    var emb_enc: EmbeddingParameters
+    var lstm_enc: LSTMParameters
+    var mlp_interpolation: MLPParameters
+    var mlp_memory: MLPParameters
+    var emb_dec: EmbeddingParameters
+    var lstm_dec: LSTMParameters
+    var linear_dec: LinearParameters
 }
 
 struct EmbeddingParameters {
-  var weight: Tensor<Float>
+    var weight: Tensor<Float>
 }
 
 struct LSTMParameters {
-  var weight_ih_l0: Tensor<Float>
-  var weight_hh_l0: Tensor<Float>
-  var bias_ih_l0: Tensor<Float>
-  var bias_hh_l0: Tensor<Float>
+    var weight_ih_l0: Tensor<Float>
+    var weight_hh_l0: Tensor<Float>
+    var bias_ih_l0: Tensor<Float>
+    var bias_hh_l0: Tensor<Float>
 }
 
 struct MLPParameters {
-  var linear1: LinearParameters
-  var linear2: LinearParameters
+    var linear1: LinearParameters
+    var linear2: LinearParameters
 }
 
 struct LinearParameters {
-  var weight: Tensor<Float>
-  var bias: Tensor<Float>
+    var weight: Tensor<Float>
+    var bias: Tensor<Float>
 }

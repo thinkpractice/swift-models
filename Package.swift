@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "swift-models",
     platforms: [
-        .macOS(.v10_13),
+        .macOS(.v10_13)
     ],
     products: [
         .executable(name: "Benchmarks", targets: ["SwiftModelsBenchmarks"]),
@@ -26,8 +26,9 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.10.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser", .branch("main")),
+        .package(url: "https://github.com/apple/swift-argument-parser", branch: "main"),
         .package(url: "https://github.com/google/swift-benchmark", from: "0.1.0"),
+        .package(url: "https://github.com/thinkpractice/TaylorTorch.git", branch: "hip_support"),
     ],
     targets: [
         .target(
@@ -36,17 +37,22 @@ let package = Package(
         .target(name: "Datasets", dependencies: ["ModelSupport"], path: "Datasets"),
         .target(name: "STBImage", path: "Support/STBImage"),
         .target(
-            name: "ModelSupport", dependencies: ["STBImage"], path: "Support", exclude: ["STBImage"]),
-        .target(name: "TensorBoard", dependencies: ["SwiftProtobuf", "ModelSupport", "TrainingLoop"], path: "TensorBoard"),
+            name: "ModelSupport", dependencies: ["STBImage"], path: "Support", exclude: ["STBImage"]
+        ),
+        .target(
+            name: "TensorBoard", dependencies: ["SwiftProtobuf", "ModelSupport", "TrainingLoop"],
+            path: "TensorBoard"),
         .target(name: "ImageClassificationModels", path: "Models/ImageClassification"),
         .target(name: "VideoClassificationModels", path: "Models/Spatiotemporal"),
-        .target(name: "TextModels",
+        .target(
+            name: "TextModels",
             dependencies: ["Checkpoints", "Datasets", "SwiftProtobuf"],
             path: "Models/Text"),
         .target(name: "RecommendationModels", path: "Models/Recommendation"),
         .target(name: "TrainingLoop", dependencies: ["ModelSupport"], path: "TrainingLoop"),
         .target(
-            name: "Autoencoder1D", dependencies: ["Datasets", "ModelSupport", "TrainingLoop", "AutoencoderCallback"],
+            name: "Autoencoder1D",
+            dependencies: ["Datasets", "ModelSupport", "TrainingLoop", "AutoencoderCallback"],
             path: "Autoencoder/Autoencoder1D"),
         .target(
             name: "Autoencoder2D", dependencies: ["Datasets", "ModelSupport"],
@@ -77,8 +83,9 @@ let package = Package(
             name: "ResNet-CIFAR10",
             dependencies: ["Datasets", "ImageClassificationModels", "TrainingLoop"],
             path: "Examples/ResNet-CIFAR10"),
-        .target(name: "BigTransfer-CIFAR100", 
-            dependencies: ["Datasets", "ImageClassificationModels"], 
+        .target(
+            name: "BigTransfer-CIFAR100",
+            dependencies: ["Datasets", "ImageClassificationModels"],
             path: "Examples/BigTransfer-CIFAR100"),
         .target(
             name: "Shallow-Water-PDE",
@@ -101,7 +108,11 @@ let package = Package(
             dependencies: ["Datasets", "ImageClassificationModels", "TrainingLoop", "TensorBoard"],
             path: "Examples/ResNet50-ImageNet"),
         .target(
-            name: "PersonLab", dependencies: ["Checkpoints", "ModelSupport", .product(name: "ArgumentParser", package: "swift-argument-parser")],
+            name: "PersonLab",
+            dependencies: [
+                "Checkpoints", "ModelSupport",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+            ],
             path: "PersonLab"),
         .target(
             name: "MiniGo", dependencies: ["Checkpoints"], path: "MiniGo", exclude: ["main.swift"]),
@@ -138,7 +149,7 @@ let package = Package(
             name: "SwiftModelsBenchmarksCore",
             dependencies: [
                 "Datasets", "ModelSupport", "ImageClassificationModels", "ArgumentParser",
-                "TextModels", "Benchmark"
+                "TextModels", "Benchmark",
             ],
             path: "SwiftModelsBenchmarksCore"),
         .target(
@@ -146,9 +157,11 @@ let package = Package(
             dependencies: ["SwiftModelsBenchmarksCore"],
             path: "SwiftModelsBenchmarks"
         ),
-        .testTarget(name: "CheckpointTests", dependencies: ["Checkpoints", "ImageClassificationModels"]),
+        .testTarget(
+            name: "CheckpointTests", dependencies: ["Checkpoints", "ImageClassificationModels"]),
         .target(
-            name: "BERT-CoLA", dependencies: ["TextModels", "Datasets", "TrainingLoop"], path: "Examples/BERT-CoLA"),
+            name: "BERT-CoLA", dependencies: ["TextModels", "Datasets", "TrainingLoop"],
+            path: "Examples/BERT-CoLA"),
         .testTarget(name: "SupportTests", dependencies: ["ModelSupport"]),
         .target(
             name: "CycleGAN",
@@ -162,21 +175,22 @@ let package = Package(
             exclude: ["main.swift"]
         ),
         .target(
-            name: "pix2pixDemo", dependencies: ["pix2pix"], path: "pix2pix", sources: ["main.swift"]),
+            name: "pix2pixDemo", dependencies: ["pix2pix"], path: "pix2pix", sources: ["main.swift"]
+        ),
         .target(
             name: "WordSeg",
             dependencies: ["ArgumentParser", "Datasets", "ModelSupport", "TextModels"],
             path: "Examples/WordSeg"
         ),
-       .target(
-           name: "Fractals",
-           dependencies: ["ArgumentParser", "ModelSupport"],
-           path: "Examples/Fractals"
-       ),
-       .target(
-           name: "GrowingNeuralCellularAutomata",
-           dependencies: ["ArgumentParser", "ModelSupport"],
-           path: "Examples/GrowingNeuralCellularAutomata"
-       )
+        .target(
+            name: "Fractals",
+            dependencies: ["ArgumentParser", "ModelSupport"],
+            path: "Examples/Fractals"
+        ),
+        .target(
+            name: "GrowingNeuralCellularAutomata",
+            dependencies: ["ArgumentParser", "ModelSupport"],
+            path: "Examples/GrowingNeuralCellularAutomata"
+        ),
     ]
 )

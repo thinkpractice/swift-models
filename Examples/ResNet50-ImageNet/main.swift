@@ -14,8 +14,8 @@
 
 import Datasets
 import ImageClassificationModels
+import TaylorTorch
 import TensorBoard
-import TensorFlow
 import TrainingLoop
 
 // XLA mode can't load Imagenet, need to use eager mode to limit memory use
@@ -26,22 +26,22 @@ var model = ResNet(classCount: 1000, depth: .resNet50)
 // https://github.com/mlcommons/training/blob/4f97c909f3aeaa3351da473d12eba461ace0be76/image_classification/tensorflow/official/resnet/imagenet_main.py#L286
 let optimizer = SGD(for: model, learningRate: 0.1, momentum: 0.9)
 public func scheduleLearningRate<L: TrainingLoopProtocol>(
-  _ loop: inout L, event: TrainingLoopEvent
+    _ loop: inout L, event: TrainingLoopEvent
 ) throws where L.Opt.Scalar == Float {
-  if event == .epochStart {
-    guard let epoch = loop.epochIndex else  { return }
-    if epoch > 30 { loop.optimizer.learningRate = 0.01 }
-    if epoch > 60 { loop.optimizer.learningRate = 0.001 }
-    if epoch > 80 { loop.optimizer.learningRate = 0.0001 }
-  }
+    if event == .epochStart {
+        guard let epoch = loop.epochIndex else { return }
+        if epoch > 30 { loop.optimizer.learningRate = 0.01 }
+        if epoch > 60 { loop.optimizer.learningRate = 0.001 }
+        if epoch > 80 { loop.optimizer.learningRate = 0.0001 }
+    }
 }
 
 var trainingLoop = TrainingLoop(
-  training: dataset.training,
-  validation: dataset.validation,
-  optimizer: optimizer,
-  lossFunction: softmaxCrossEntropy,
-  metrics: [.accuracy],
-  callbacks: [scheduleLearningRate, tensorBoardStatisticsLogger()])
+    training: dataset.training,
+    validation: dataset.validation,
+    optimizer: optimizer,
+    lossFunction: softmaxCrossEntropy,
+    metrics: [.accuracy],
+    callbacks: [scheduleLearningRate, tensorBoardStatisticsLogger()])
 
 try! trainingLoop.fit(&model, epochs: 90, on: device)

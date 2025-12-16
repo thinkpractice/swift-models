@@ -1,6 +1,6 @@
 import Datasets
 import Foundation
-import TensorFlow
+import TaylorTorch
 import XCTest
 
 final class MovieLensTests: XCTestCase {
@@ -14,6 +14,6 @@ final class MovieLensTests: XCTestCase {
 
 extension MovieLensTests {
     static var allTests = [
-        ("testCreateMovieLens", testCreateMovieLens),
+        ("testCreateMovieLens", testCreateMovieLens)
     ]
 }

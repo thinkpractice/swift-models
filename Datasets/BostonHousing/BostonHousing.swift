@@ -19,7 +19,7 @@
 
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 public struct BostonHousing {
     public let trainPercentage: Float = 0.8

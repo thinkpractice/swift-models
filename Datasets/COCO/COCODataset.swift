@@ -13,82 +13,87 @@
 // limitations under the License.
 
 import Foundation
-import TensorFlow
+import TaylorTorch
 
 public struct COCODataset<Entropy: RandomNumberGenerator> {
-  /// Type of the collection of non-collated batches.
-  public typealias Batches = Slices<Sampling<[ObjectDetectionExample], ArraySlice<Int>>>
-  /// The type of the training data, represented as a sequence of epochs, which
-  /// are collection of batches.
-  public typealias Training = LazyMapSequence<
-    TrainingEpochs<[ObjectDetectionExample], Entropy>,
-    LazyMapSequence<Batches, [ObjectDetectionExample]>
-  >
-  /// The type of the validation data, represented as a collection of batches.
-  public typealias Validation = LazyMapSequence<Slices<[ObjectDetectionExample]>, [ObjectDetectionExample]>
-  /// The training epochs.
-  public let training: Training
-  /// The validation batches.
-  public let validation: Validation
+    /// Type of the collection of non-collated batches.
+    public typealias Batches = Slices<Sampling<[ObjectDetectionExample], ArraySlice<Int>>>
+    /// The type of the training data, represented as a sequence of epochs, which
+    /// are collection of batches.
+    public typealias Training = LazyMapSequence<
+        TrainingEpochs<[ObjectDetectionExample], Entropy>,
+        LazyMapSequence<Batches, [ObjectDetectionExample]>
+    >
+    /// The type of the validation data, represented as a collection of batches.
+    public typealias Validation = LazyMapSequence<
+        Slices<[ObjectDetectionExample]>, [ObjectDetectionExample]
+    >
+    /// The training epochs.
+    public let training: Training
+    /// The validation batches.
+    public let validation: Validation
 
-  /// Creates an instance with `batchSize` on `device` using `remoteBinaryArchiveLocation`.
-  ///
-  /// - Parameters:
-  ///   - training: The COCO metadata for the training data.
-  ///   - validation: The COCO metadata for the validation data.
-  ///   - includeMasks: Whether to include the segmentation masks when loading the dataset.
-  ///   - batchSize: Number of images provided per batch.
-  ///   - entropy: A source of randomness used to shuffle sample ordering.  It
-  ///     will be stored in `self`, so if it is only pseudorandom and has value
-  ///     semantics, the sequence of epochs is deterministic and not dependent
-  ///     on other operations.
-  ///   - device: The Device on which resulting Tensors from this dataset will be placed, as well
-  ///     as where the latter stages of any conversion calculations will be performed.
-  public init(
-    training: COCO, validation: COCO, includeMasks: Bool, batchSize: Int,
-    entropy: Entropy, device: Device,
-    transform: @escaping (ObjectDetectionExample) -> [ObjectDetectionExample]
-  ) {
-    let trainingSamples = loadCOCOExamples(
-      from: training,
-      includeMasks: includeMasks,
-      batchSize: batchSize)
+    /// Creates an instance with `batchSize` on `device` using `remoteBinaryArchiveLocation`.
+    ///
+    /// - Parameters:
+    ///   - training: The COCO metadata for the training data.
+    ///   - validation: The COCO metadata for the validation data.
+    ///   - includeMasks: Whether to include the segmentation masks when loading the dataset.
+    ///   - batchSize: Number of images provided per batch.
+    ///   - entropy: A source of randomness used to shuffle sample ordering.  It
+    ///     will be stored in `self`, so if it is only pseudorandom and has value
+    ///     semantics, the sequence of epochs is deterministic and not dependent
+    ///     on other operations.
+    ///   - device: The Device on which resulting Tensors from this dataset will be placed, as well
+    ///     as where the latter stages of any conversion calculations will be performed.
+    public init(
+        training: COCO, validation: COCO, includeMasks: Bool, batchSize: Int,
+        entropy: Entropy, device: Device,
+        transform: @escaping (ObjectDetectionExample) -> [ObjectDetectionExample]
+    ) {
+        let trainingSamples = loadCOCOExamples(
+            from: training,
+            includeMasks: includeMasks,
+            batchSize: batchSize)
 
-    self.training = TrainingEpochs(samples: trainingSamples, batchSize: batchSize, entropy: entropy)
-      .lazy.map { (batches: Batches) -> LazyMapSequence<Batches, [ObjectDetectionExample]> in
-        return batches.lazy.map {
-          makeBatch(samples: $0, device: device, transform: transform)
+        self.training = TrainingEpochs(
+            samples: trainingSamples, batchSize: batchSize, entropy: entropy
+        )
+        .lazy.map { (batches: Batches) -> LazyMapSequence<Batches, [ObjectDetectionExample]> in
+            return batches.lazy.map {
+                makeBatch(samples: $0, device: device, transform: transform)
+            }
         }
-      }
 
-    let validationSamples = loadCOCOExamples(
-      from: validation,
-      includeMasks: includeMasks,
-      batchSize: batchSize)
+        let validationSamples = loadCOCOExamples(
+            from: validation,
+            includeMasks: includeMasks,
+            batchSize: batchSize)
 
-    self.validation = validationSamples.inBatches(of: batchSize).lazy.map {
-      makeBatch(samples: $0, device: device, transform: transform)
+        self.validation = validationSamples.inBatches(of: batchSize).lazy.map {
+            makeBatch(samples: $0, device: device, transform: transform)
+        }
     }
-  }
 
-  public static func identity(_ example: ObjectDetectionExample) -> [ObjectDetectionExample] {
-    return [example]
-  }
+    public static func identity(_ example: ObjectDetectionExample) -> [ObjectDetectionExample] {
+        return [example]
+    }
 }
 
 extension COCODataset: ObjectDetectionData where Entropy == SystemRandomNumberGenerator {
-  /// Creates an instance with `batchSize`, using the SystemRandomNumberGenerator.
-  public init(
-    training: COCO, validation: COCO, includeMasks: Bool, batchSize: Int,
-    on device: Device = Device.default,
-    transform: @escaping (ObjectDetectionExample) -> [ObjectDetectionExample] = COCODataset.identity
-  ) {
-    self.init(
-      training: training, validation: validation, includeMasks: includeMasks, batchSize: batchSize,
-      entropy: SystemRandomNumberGenerator(), device: device, transform: transform)
-  }
+    /// Creates an instance with `batchSize`, using the SystemRandomNumberGenerator.
+    public init(
+        training: COCO, validation: COCO, includeMasks: Bool, batchSize: Int,
+        on device: Device = Device.default,
+        transform: @escaping (ObjectDetectionExample) -> [ObjectDetectionExample] = COCODataset
+            .identity
+    ) {
+        self.init(
+            training: training, validation: validation, includeMasks: includeMasks,
+            batchSize: batchSize,
+            entropy: SystemRandomNumberGenerator(), device: device, transform: transform)
+    }
 }
-
 
 func loadCOCOExamples(from coco: COCO, includeMasks: Bool, batchSize: Int)
     -> [ObjectDetectionExample]
@@ -170,10 +175,10 @@ func loadCOCOExample(coco: COCO, image: COCO.Image, includeMasks: Bool) -> Objec
 }
 
 fileprivate func makeBatch<BatchSamples: Collection>(
-  samples: BatchSamples, device: Device,
-  transform: (ObjectDetectionExample) -> [ObjectDetectionExample]
+    samples: BatchSamples, device: Device,
+    transform: (ObjectDetectionExample) -> [ObjectDetectionExample]
 ) -> [ObjectDetectionExample] where BatchSamples.Element == ObjectDetectionExample {
-  return samples.reduce([]) {
-    $0 + transform($1)
-  }
+    return samples.reduce([]) {
+        $0 + transform($1)
+    }
 }

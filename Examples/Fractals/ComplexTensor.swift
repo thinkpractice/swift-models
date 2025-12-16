@@ -13,27 +13,27 @@
 // limitations under the License.
 
 import ArgumentParser
-import TensorFlow
+import TaylorTorch
 
 struct ComplexTensor {
-  let real: Tensor<Float>
-  let imaginary: Tensor<Float>
+    let real: Tensor<Float>
+    let imaginary: Tensor<Float>
 }
 
-func +(lhs: ComplexTensor, rhs: ComplexTensor) -> ComplexTensor {
-  let real = lhs.real + rhs.real
-  let imaginary = lhs.imaginary + rhs.imaginary
-  return ComplexTensor(real: real, imaginary: imaginary)
+func + (lhs: ComplexTensor, rhs: ComplexTensor) -> ComplexTensor {
+    let real = lhs.real + rhs.real
+    let imaginary = lhs.imaginary + rhs.imaginary
+    return ComplexTensor(real: real, imaginary: imaginary)
 }
 
-func *(lhs: ComplexTensor, rhs: ComplexTensor) -> ComplexTensor {
-  let real = lhs.real .* rhs.real - lhs.imaginary .* rhs.imaginary
-  let imaginary = lhs.real .* rhs.imaginary + lhs.imaginary .* rhs.real
-  return ComplexTensor(real: real, imaginary: imaginary)
+func * (lhs: ComplexTensor, rhs: ComplexTensor) -> ComplexTensor {
+    let real = lhs.real .* rhs.real - lhs.imaginary .* rhs.imaginary
+    let imaginary = lhs.real .* rhs.imaginary + lhs.imaginary .* rhs.real
+    return ComplexTensor(real: real, imaginary: imaginary)
 }
 
 func abs(_ value: ComplexTensor) -> Tensor<Float> {
-  return value.real .* value.real + value.imaginary .* value.imaginary
+    return value.real .* value.real + value.imaginary .* value.imaginary
 }
 
 struct ComplexRegion {
@@ -47,7 +47,7 @@ extension ComplexRegion: ExpressibleByArgument {
     init?(argument: String) {
         let subArguments = argument.split(separator: ",").compactMap { Float(String($0)) }
         guard subArguments.count >= 4 else { return nil }
-        
+
         self.realMinimum = subArguments[0]
         self.realMaximum = subArguments[1]
         self.imaginaryMinimum = subArguments[2]

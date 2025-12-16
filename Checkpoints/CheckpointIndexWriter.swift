@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Foundation
-import TensorFlow
+import TaylorTorch
 
 class CheckpointIndexWriter {
     // TODO: Extend handling to different tensor types.

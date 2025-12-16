@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 
 /// A mapping between individual characters and their integer representation.
 ///
@@ -23,58 +23,58 @@ import TensorFlow
 ///   vocabulary.
 public struct Alphabet {
 
-  /// A type whose instances represent a character.
-  public typealias Element = String
+    /// A type whose instances represent a character.
+    public typealias Element = String
 
-  /// A one-to-one mapping between a set of characters and a unique integer.
-  public var dictionary: BijectiveDictionary<String, Int32>
+    /// A one-to-one mapping between a set of characters and a unique integer.
+    public var dictionary: BijectiveDictionary<String, Int32>
 
-  /// A marker denoting the end of a sequence.
-  public let eos: Int32
+    /// A marker denoting the end of a sequence.
+    public let eos: Int32
 
-  /// A marker denoting the end of a word.
-  public let eow: Int32
+    /// A marker denoting the end of a word.
+    public let eow: Int32
 
-  /// A marker used for padding inside a sequence.
-  public let pad: Int32
+    /// A marker used for padding inside a sequence.
+    public let pad: Int32
 
-  /// Creates an instance containing a mapping from `letters` to unique
-  /// integers, including markers `eos`, `eow`, and `pad`.
-  public init<C: Collection>(_ letters: C, eos: String, eow: String, pad: String)
-  where C.Element == Character {
-    self.dictionary = .init(zip(letters.lazy.map { String($0) }, 0...))
+    /// Creates an instance containing a mapping from `letters` to unique
+    /// integers, including markers `eos`, `eow`, and `pad`.
+    public init<C: Collection>(_ letters: C, eos: String, eow: String, pad: String)
+    where C.Element == Character {
+        self.dictionary = .init(zip(letters.lazy.map { String($0) }, 0...))
 
-    self.eos = Int32(self.dictionary.count)
-    self.dictionary[eos] = self.eos
+        self.eos = Int32(self.dictionary.count)
+        self.dictionary[eos] = self.eos
 
-    self.eow = Int32(self.dictionary.count)
-    self.dictionary[eow] = self.eow
+        self.eow = Int32(self.dictionary.count)
+        self.dictionary[eow] = self.eow
 
-    self.pad = Int32(self.dictionary.count)
-    self.dictionary[pad] = self.pad
-  }
+        self.pad = Int32(self.dictionary.count)
+        self.dictionary[pad] = self.pad
+    }
 
-  /// Creates an instance containing a mapping from `letters` to unique
-  /// integers, including markers `eos`, `eow`, and `pad`.
-  public init<C: Collection>(_ letters: C, eos: String, eow: String, pad: String)
-  where C.Element == Element {
-    self.dictionary = .init(zip(letters.lazy.map { String($0) }, 0...))
+    /// Creates an instance containing a mapping from `letters` to unique
+    /// integers, including markers `eos`, `eow`, and `pad`.
+    public init<C: Collection>(_ letters: C, eos: String, eow: String, pad: String)
+    where C.Element == Element {
+        self.dictionary = .init(zip(letters.lazy.map { String($0) }, 0...))
 
-    self.eos = Int32(self.dictionary.count)
-    self.dictionary[eos] = self.eos
+        self.eos = Int32(self.dictionary.count)
+        self.dictionary[eos] = self.eos
 
-    self.eow = Int32(self.dictionary.count)
-    self.dictionary[eow] = self.eow
+        self.eow = Int32(self.dictionary.count)
+        self.dictionary[eow] = self.eow
 
-    self.pad = Int32(self.dictionary.count)
-    self.dictionary[pad] = self.pad
-  }
+        self.pad = Int32(self.dictionary.count)
+        self.dictionary[pad] = self.pad
+    }
 
-  /// A count of unique characters, including markers.
-  public var count: Int { return dictionary.count }
+    /// A count of unique characters, including markers.
+    public var count: Int { return dictionary.count }
 
-  /// Accesses the `key`th element, returning `nil` if it does not exist.
-  public subscript(key: String) -> Int32? {
-    return dictionary[key]
-  }
+    /// Accesses the `key`th element, returning `nil` if it does not exist.
+    public subscript(key: String) -> Int32? {
+        return dictionary[key]
+    }
 }

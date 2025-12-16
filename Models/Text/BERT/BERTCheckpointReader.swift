@@ -16,48 +16,56 @@ import Checkpoints
 import Datasets
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 extension TransformerEncoderLayer {
-  public mutating func load(bert reader: CheckpointReader, prefix: String) {
-    multiHeadAttention.queryWeight = reader.readTensor(
-      name: "\(prefix)/attention/self/query/kernel")
-    multiHeadAttention.queryBias = reader.readTensor(name: "\(prefix)/attention/self/query/bias")
-    multiHeadAttention.keyWeight = reader.readTensor(name: "\(prefix)/attention/self/key/kernel")
-    multiHeadAttention.keyBias = reader.readTensor(name: "\(prefix)/attention/self/key/bias")
-    multiHeadAttention.valueWeight = reader.readTensor(
-      name: "\(prefix)/attention/self/value/kernel")
-    multiHeadAttention.valueBias = reader.readTensor(name: "\(prefix)/attention/self/value/bias")
-    attentionWeight = reader.readTensor(name: "\(prefix)/attention/output/dense/kernel")
-    attentionBias = reader.readTensor(name: "\(prefix)/attention/output/dense/bias")
-    attentionLayerNorm.offset = reader.readTensor(name: "\(prefix)/attention/output/LayerNorm/beta")
-    attentionLayerNorm.scale = reader.readTensor(name: "\(prefix)/attention/output/LayerNorm/gamma")
-    intermediateWeight = reader.readTensor(name: "\(prefix)/intermediate/dense/kernel")
-    intermediateBias = reader.readTensor(name: "\(prefix)/intermediate/dense/bias")
-    outputWeight = reader.readTensor(name: "\(prefix)/output/dense/kernel")
-    outputBias = reader.readTensor(name: "\(prefix)/output/dense/bias")
-    outputLayerNorm.offset = reader.readTensor(name: "\(prefix)/output/LayerNorm/beta")
-    outputLayerNorm.scale = reader.readTensor(name: "\(prefix)/output/LayerNorm/gamma")
-  }
+    public mutating func load(bert reader: CheckpointReader, prefix: String) {
+        multiHeadAttention.queryWeight = reader.readTensor(
+            name: "\(prefix)/attention/self/query/kernel")
+        multiHeadAttention.queryBias = reader.readTensor(
+            name: "\(prefix)/attention/self/query/bias")
+        multiHeadAttention.keyWeight = reader.readTensor(
+            name: "\(prefix)/attention/self/key/kernel")
+        multiHeadAttention.keyBias = reader.readTensor(name: "\(prefix)/attention/self/key/bias")
+        multiHeadAttention.valueWeight = reader.readTensor(
+            name: "\(prefix)/attention/self/value/kernel")
+        multiHeadAttention.valueBias = reader.readTensor(
+            name: "\(prefix)/attention/self/value/bias")
+        attentionWeight = reader.readTensor(name: "\(prefix)/attention/output/dense/kernel")
+        attentionBias = reader.readTensor(name: "\(prefix)/attention/output/dense/bias")
+        attentionLayerNorm.offset = reader.readTensor(
+            name: "\(prefix)/attention/output/LayerNorm/beta")
+        attentionLayerNorm.scale = reader.readTensor(
+            name: "\(prefix)/attention/output/LayerNorm/gamma")
+        intermediateWeight = reader.readTensor(name: "\(prefix)/intermediate/dense/kernel")
+        intermediateBias = reader.readTensor(name: "\(prefix)/intermediate/dense/bias")
+        outputWeight = reader.readTensor(name: "\(prefix)/output/dense/kernel")
+        outputBias = reader.readTensor(name: "\(prefix)/output/dense/bias")
+        outputLayerNorm.offset = reader.readTensor(name: "\(prefix)/output/LayerNorm/beta")
+        outputLayerNorm.scale = reader.readTensor(name: "\(prefix)/output/LayerNorm/gamma")
+    }
 
-  public mutating func load(albert reader: CheckpointReader, prefix: String) {
-    multiHeadAttention.queryWeight = reader.readTensor(
-      name: "\(prefix)/attention_1/self/query/kernel")
-    multiHeadAttention.queryBias = reader.readTensor(name: "\(prefix)/attention_1/self/query/bias")
-    multiHeadAttention.keyWeight = reader.readTensor(name: "\(prefix)/attention_1/self/key/kernel")
-    multiHeadAttention.keyBias = reader.readTensor(name: "\(prefix)/attention_1/self/key/bias")
-    multiHeadAttention.valueWeight = reader.readTensor(
-      name: "\(prefix)/attention_1/self/value/kernel")
-    multiHeadAttention.valueBias = reader.readTensor(name: "\(prefix)/attention_1/self/value/bias")
-    attentionWeight = reader.readTensor(name: "\(prefix)/attention_1/output/dense/kernel")
-    attentionBias = reader.readTensor(name: "\(prefix)/attention_1/output/dense/bias")
-    attentionLayerNorm.offset = reader.readTensor(name: "\(prefix)/LayerNorm/beta")
-    attentionLayerNorm.scale = reader.readTensor(name: "\(prefix)/LayerNorm/gamma")
-    intermediateWeight = reader.readTensor(name: "\(prefix)/ffn_1/intermediate/dense/kernel")
-    intermediateBias = reader.readTensor(name: "\(prefix)/ffn_1/intermediate/dense/bias")
-    outputWeight = reader.readTensor(name: "\(prefix)/ffn_1/intermediate/output/dense/kernel")
-    outputBias = reader.readTensor(name: "\(prefix)/ffn_1/intermediate/output/dense/bias")
-    outputLayerNorm.offset = reader.readTensor(name: "\(prefix)/LayerNorm_1/beta")
-    outputLayerNorm.scale = reader.readTensor(name: "\(prefix)/LayerNorm_1/gamma")
-  }
+    public mutating func load(albert reader: CheckpointReader, prefix: String) {
+        multiHeadAttention.queryWeight = reader.readTensor(
+            name: "\(prefix)/attention_1/self/query/kernel")
+        multiHeadAttention.queryBias = reader.readTensor(
+            name: "\(prefix)/attention_1/self/query/bias")
+        multiHeadAttention.keyWeight = reader.readTensor(
+            name: "\(prefix)/attention_1/self/key/kernel")
+        multiHeadAttention.keyBias = reader.readTensor(name: "\(prefix)/attention_1/self/key/bias")
+        multiHeadAttention.valueWeight = reader.readTensor(
+            name: "\(prefix)/attention_1/self/value/kernel")
+        multiHeadAttention.valueBias = reader.readTensor(
+            name: "\(prefix)/attention_1/self/value/bias")
+        attentionWeight = reader.readTensor(name: "\(prefix)/attention_1/output/dense/kernel")
+        attentionBias = reader.readTensor(name: "\(prefix)/attention_1/output/dense/bias")
+        attentionLayerNorm.offset = reader.readTensor(name: "\(prefix)/LayerNorm/beta")
+        attentionLayerNorm.scale = reader.readTensor(name: "\(prefix)/LayerNorm/gamma")
+        intermediateWeight = reader.readTensor(name: "\(prefix)/ffn_1/intermediate/dense/kernel")
+        intermediateBias = reader.readTensor(name: "\(prefix)/ffn_1/intermediate/dense/bias")
+        outputWeight = reader.readTensor(name: "\(prefix)/ffn_1/intermediate/output/dense/kernel")
+        outputBias = reader.readTensor(name: "\(prefix)/ffn_1/intermediate/output/dense/bias")
+        outputLayerNorm.offset = reader.readTensor(name: "\(prefix)/LayerNorm_1/beta")
+        outputLayerNorm.scale = reader.readTensor(name: "\(prefix)/LayerNorm_1/gamma")
+    }
 }

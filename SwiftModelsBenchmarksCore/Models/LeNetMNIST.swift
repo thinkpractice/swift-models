@@ -15,51 +15,51 @@
 import Benchmark
 import Datasets
 import ImageClassificationModels
-import TensorFlow
+import TaylorTorch
 
 let LeNetMNIST = BenchmarkSuite(
-  name: "LeNetMNIST",
-  settings: BatchSize(128), WarmupIterations(2)
+    name: "LeNetMNIST",
+    settings: BatchSize(128), WarmupIterations(2)
 ) { suite in
 
-  func inference(state: inout BenchmarkState) throws {
-    if state.settings.synthetic {
-      try runImageClassificationInference(
-        model: LeNet.self, dataset: SyntheticMNIST.self, state: &state)
-    } else {
-      try runImageClassificationInference(
-        model: LeNet.self, dataset: MNIST<SystemRandomNumberGenerator>.self, state: &state)
+    func inference(state: inout BenchmarkState) throws {
+        if state.settings.synthetic {
+            try runImageClassificationInference(
+                model: LeNet.self, dataset: SyntheticMNIST.self, state: &state)
+        } else {
+            try runImageClassificationInference(
+                model: LeNet.self, dataset: MNIST<SystemRandomNumberGenerator>.self, state: &state)
+        }
     }
-  }
 
-  func training(state: inout BenchmarkState) throws {
-    if state.settings.synthetic {
-      try runImageClassificationTraining(
-        model: LeNet.self, dataset: SyntheticMNIST.self, state: &state)
-    } else {
-      try runImageClassificationTraining(
-        model: LeNet.self, dataset: MNIST<SystemRandomNumberGenerator>.self, state: &state)
+    func training(state: inout BenchmarkState) throws {
+        if state.settings.synthetic {
+            try runImageClassificationTraining(
+                model: LeNet.self, dataset: SyntheticMNIST.self, state: &state)
+        } else {
+            try runImageClassificationTraining(
+                model: LeNet.self, dataset: MNIST<SystemRandomNumberGenerator>.self, state: &state)
+        }
     }
-  }
 
-  suite.benchmark("inference", settings: Backend(.eager), function: inference)
-  suite.benchmark("inference_x10", settings: Backend(.x10), function: inference)
-  suite.benchmark("training", settings: Backend(.eager), function: training)
-  suite.benchmark("training_x10", settings: Backend(.x10), function: training)
+    suite.benchmark("inference", settings: Backend(.eager), function: inference)
+    suite.benchmark("inference_x10", settings: Backend(.x10), function: inference)
+    suite.benchmark("training", settings: Backend(.eager), function: training)
+    suite.benchmark("training_x10", settings: Backend(.x10), function: training)
 }
 
 extension LeNet: ImageClassificationModel {
-  static var preferredInputDimensions: [Int] { [28, 28, 1] }
-  static var outputLabels: Int { 10 }
+    static var preferredInputDimensions: [Int] { [28, 28, 1] }
+    static var outputLabels: Int { 10 }
 }
 
 final class SyntheticMNIST: SyntheticImageDataset<SystemRandomNumberGenerator>,
-  ImageClassificationData
+    ImageClassificationData
 {
-  public init(batchSize: Int, on device: Device = Device.default) {
-    super.init(
-      batchSize: batchSize, labels: LeNet.outputLabels,
-      dimensions: LeNet.preferredInputDimensions, entropy: SystemRandomNumberGenerator(),
-      device: device)
-  }
+    public init(batchSize: Int, on device: Device = Device.default) {
+        super.init(
+            batchSize: batchSize, labels: LeNet.outputLabels,
+            dimensions: LeNet.preferredInputDimensions, entropy: SystemRandomNumberGenerator(),
+            device: device)
+    }
 }

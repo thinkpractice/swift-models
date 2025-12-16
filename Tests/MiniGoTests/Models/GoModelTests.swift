@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 import XCTest
 
 @testable import MiniGo
@@ -32,6 +32,6 @@ final class GoModelTests: XCTestCase {
 
 extension GoModelTests {
     static var allTests = [
-        ("testInferenceShape", testInferenceShape),
+        ("testInferenceShape", testInferenceShape)
     ]
 }

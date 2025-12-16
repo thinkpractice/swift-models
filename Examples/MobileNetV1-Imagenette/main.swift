@@ -14,15 +14,15 @@
 
 import Datasets
 import ImageClassificationModels
-import TensorFlow
+import TaylorTorch
 import TrainingLoop
 
 // Until https://github.com/tensorflow/swift-apis/issues/993 is fixed, default to the eager-mode
 // device on macOS instead of X10.
 #if os(macOS)
-  let device = Device.defaultTFEager
+    let device = Device.defaultTFEager
 #else
-  let device = Device.defaultXLA
+    let device = Device.defaultXLA
 #endif
 
 let dataset = Imagenette(batchSize: 64, inputSize: .resized320, outputSize: 224, on: device)
@@ -30,10 +30,10 @@ var model = MobileNetV1(classCount: 10)
 let optimizer = SGD(for: model, learningRate: 0.02, momentum: 0.9)
 
 var trainingLoop = TrainingLoop(
-  training: dataset.training,
-  validation: dataset.validation,
-  optimizer: optimizer,
-  lossFunction: softmaxCrossEntropy,
-  metrics: [.accuracy])
+    training: dataset.training,
+    validation: dataset.validation,
+    optimizer: optimizer,
+    lossFunction: softmaxCrossEntropy,
+    metrics: [.accuracy])
 
 try! trainingLoop.fit(&model, epochs: 10, on: device)

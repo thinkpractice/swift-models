@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Datasets
-import TensorFlow
+import TaylorTorch
 
 // Import Dataset
 let dataset = BostonHousing()

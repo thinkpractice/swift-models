@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 
 /// Input to an attention layer.
 public struct AttentionInput<Scalar: TensorFlowFloatingPoint>: Differentiable {

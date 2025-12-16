@@ -1,4 +1,4 @@
-import TensorFlow
+import TaylorTorch
 import Foundation
 
 /// A model that applies style.

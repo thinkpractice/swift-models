@@ -1,7 +1,7 @@
+import Checkpoints
 import FastStyleTransfer
 import Foundation
-import Checkpoints
-import TensorFlow
+import TaylorTorch
 
 extension TransformerNet: ImportableLayer {}
 

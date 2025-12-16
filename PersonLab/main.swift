@@ -15,61 +15,61 @@
 import ArgumentParser
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 struct Inference: ParsableCommand {
-  static var configuration = CommandConfiguration(
-    commandName: "personlab",
-    abstract: """
-      Runs human pose estimation on a local image file.
-      """
-  )
+    static var configuration = CommandConfiguration(
+        commandName: "personlab",
+        abstract: """
+            Runs human pose estimation on a local image file.
+            """
+    )
 
-  @Argument(help: "Path to local image to run pose estimation on")
-  var imagePath: String
+    @Argument(help: "Path to local image to run pose estimation on")
+    var imagePath: String
 
-  @Option(name: .shortAndLong, help: "Path to checkpoint directory")
-  var checkpointPath: String?
+    @Option(name: .shortAndLong, help: "Path to checkpoint directory")
+    var checkpointPath: String?
 
-  @Flag(name: .shortAndLong, help: "Print profiling data")
-  var profiling = false
+    @Flag(name: .shortAndLong, help: "Print profiling data")
+    var profiling = false
 
-  func run() {
-    Context.local.learningPhase = .inference
-    var config = Config(printProfilingData: profiling)
-    if checkpointPath != nil {
-      config.checkpointPath = URL(fileURLWithPath: checkpointPath!)
+    func run() {
+        Context.local.learningPhase = .inference
+        var config = Config(printProfilingData: profiling)
+        if checkpointPath != nil {
+            config.checkpointPath = URL(fileURLWithPath: checkpointPath!)
+        }
+        let model = PersonLab(config)
+
+        let fileManager = FileManager()
+        if !fileManager.fileExists(atPath: imagePath) {
+            print("No image found at path: \(imagePath)")
+            return
+        }
+        let image = Image(contentsOf: URL(fileURLWithPath: imagePath))
+
+        var poses = [Pose]()
+        if profiling {
+            print("Running model 10 times to see how inference time changes.")
+            for _ in 1...10 {
+                poses = model(image)
+            }
+        } else {
+            poses = model(image)
+        }
+
+        var drawnTensor = image.tensor
+        for pose in poses {
+            draw(pose, on: &drawnTensor)
+        }
+        do {
+            try drawnTensor.saveImage(directory: "./", name: "out")
+            print("Output image saved to 'out.jpg'")
+        } catch {
+            print("Error during final image output: \(error).")
+        }
     }
-    let model = PersonLab(config)
-
-    let fileManager = FileManager()
-    if !fileManager.fileExists(atPath: imagePath) {
-      print("No image found at path: \(imagePath)")
-      return
-    }
-    let image = Image(contentsOf: URL(fileURLWithPath: imagePath))
-
-    var poses = [Pose]()
-    if profiling {
-      print("Running model 10 times to see how inference time changes.")
-      for _ in 1...10 {
-        poses = model(image)
-      }
-    } else {
-      poses = model(image)
-    }
-
-    var drawnTensor = image.tensor
-    for pose in poses {
-      draw(pose, on: &drawnTensor)
-    }
-    do {
-      try drawnTensor.saveImage(directory: "./", name: "out")
-      print("Output image saved to 'out.jpg'")
-    } catch {
-      print("Error during final image output: \(error).")
-    }
-  }
 }
 
 Inference.main()

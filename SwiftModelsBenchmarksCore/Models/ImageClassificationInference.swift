@@ -15,47 +15,47 @@
 import Benchmark
 import Datasets
 import ImageClassificationModels
-import TensorFlow
+import TaylorTorch
 
 protocol ImageClassificationModel: Layer where Input == Tensor<Float>, Output == Tensor<Float> {
-  init()
-  static var preferredInputDimensions: [Int] { get }
-  static var outputLabels: Int { get }
+    init()
+    static var preferredInputDimensions: [Int] { get }
+    static var outputLabels: Int { get }
 }
 
 func runImageClassificationInference<Model, ClassificationDataset>(
-  model modelType: Model.Type,
-  dataset realDatasetType: ClassificationDataset.Type,
-  state: inout BenchmarkState
+    model modelType: Model.Type,
+    dataset realDatasetType: ClassificationDataset.Type,
+    state: inout BenchmarkState
 ) throws
 where
-  Model: ImageClassificationModel,
-  ClassificationDataset: ImageClassificationData
+    Model: ImageClassificationModel,
+    ClassificationDataset: ImageClassificationData
 {
-  let settings = state.settings
-  let device = settings.device
-  let batchSize = settings.batchSize!
-  let dataset = ClassificationDataset(batchSize: batchSize, on: device)
-  var model = Model()
-  model.move(to: device)
+    let settings = state.settings
+    let device = settings.device
+    let batchSize = settings.batchSize!
+    let dataset = ClassificationDataset(batchSize: batchSize, on: device)
+    var model = Model()
+    model.move(to: device)
 
-  for epochBatches in dataset.training {
-    for batch in epochBatches {
-      let images = batch.data
+    for epochBatches in dataset.training {
+        for batch in epochBatches {
+            let images = batch.data
 
-      do {
-        try state.measure {
-          let _ = model(images)
-          LazyTensorBarrier()
+            do {
+                try state.measure {
+                    let _ = model(images)
+                    LazyTensorBarrier()
+                }
+            } catch {
+                if settings.backend == .x10 {
+                    // A synchronous barrier is needed for X10 to ensure all execution completes
+                    // before tearing down the model.
+                    LazyTensorBarrier(wait: true)
+                }
+                throw error
+            }
         }
-      } catch {
-        if settings.backend == .x10 {
-          // A synchronous barrier is needed for X10 to ensure all execution completes
-          // before tearing down the model.
-          LazyTensorBarrier(wait: true)
-        }
-        throw error
-      }
     }
-  }
 }

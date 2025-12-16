@@ -14,7 +14,7 @@
 
 import Checkpoints
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 public struct TransformerLMConfig: Codable {
     public let vocabSize: Int

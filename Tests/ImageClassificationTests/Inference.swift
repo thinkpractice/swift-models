@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 import XCTest
 
 @testable import ImageClassificationModels
@@ -30,7 +30,7 @@ final class ImageClassificationInferenceTests: XCTestCase {
         let bigTransferResult = bigTransfer(input)
         XCTAssertEqual(bigTransferResult.shape, [1, 1000])
     }
-    
+
     func testDenseNet121() {
         let input = Tensor<Float>(
             randomNormal: [1, 224, 224, 3], mean: Tensor<Float>(0.5),
@@ -269,24 +269,24 @@ final class ImageClassificationInferenceTests: XCTestCase {
         let resNet152Result = resNet152(input)
         XCTAssertEqual(resNet152Result.shape, [1, 1000])
     }
-    
+
     func testShuffleNetV2() {
         let input = Tensor<Float>(
-        randomNormal: [1, 224, 224, 3], mean: Tensor<Float>(0.5),
-        standardDeviation: Tensor<Float>(0.1), seed: (0xffeffe, 0xfffe))
-        
+            randomNormal: [1, 224, 224, 3], mean: Tensor<Float>(0.5),
+            standardDeviation: Tensor<Float>(0.1), seed: (0xffeffe, 0xfffe))
+
         let shuffleNetV2x05 = ShuffleNetV2(kind: .shuffleNetV2x05)
         let shuffleNetV2x05Result = shuffleNetV2x05(input)
         XCTAssertEqual(shuffleNetV2x05Result.shape, [1, 1000])
-        
+
         let shuffleNetV2x10 = ShuffleNetV2(kind: .shuffleNetV2x10)
         let shuffleNetV2x10Result = shuffleNetV2x10(input)
         XCTAssertEqual(shuffleNetV2x10Result.shape, [1, 1000])
-        
+
         let shuffleNetV2x15 = ShuffleNetV2(kind: .shuffleNetV2x15)
         let shuffleNetV2x15Result = shuffleNetV2x15(input)
         XCTAssertEqual(shuffleNetV2x15Result.shape, [1, 1000])
-        
+
         let shuffleNetV2x20 = ShuffleNetV2(kind: .shuffleNetV2x20)
         let shuffleNetV2x20Result = shuffleNetV2x20(input)
         XCTAssertEqual(shuffleNetV2x20Result.shape, [1, 1000])
@@ -372,7 +372,7 @@ final class ImageClassificationInferenceTests: XCTestCase {
         let vgg19Result = vgg19(input)
         XCTAssertEqual(vgg19Result.shape, [1, 1000])
     }
-    
+
     func testXception() {
         // ImageNet size
         let inputImageNet = Tensor<Float>(

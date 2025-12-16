@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 
 struct CellRule: Layer {
   @noDerivative var perceptionFilter: Tensor<Float>

@@ -15,7 +15,7 @@
 import Checkpoints
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 public struct NetG: Layer {
     

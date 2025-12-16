@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import Datasets
 import Foundation
 import ModelSupport
-import TensorFlow
-import Datasets
+import TaylorTorch
 
 let options = Options.parseOrExit()
 
@@ -24,8 +24,10 @@ let dataset = try! CycleGANDataset(
     trainBatchSize: 1,
     testBatchSize: 1)
 
-var generatorG = ResNetGenerator(inputChannels: 3, outputChannels: 3, blocks: 9, ngf: 64, normalization: InstanceNorm2D.self)
-var generatorF = ResNetGenerator(inputChannels: 3, outputChannels: 3, blocks: 9, ngf: 64, normalization: InstanceNorm2D.self)
+var generatorG = ResNetGenerator(
+    inputChannels: 3, outputChannels: 3, blocks: 9, ngf: 64, normalization: InstanceNorm2D.self)
+var generatorF = ResNetGenerator(
+    inputChannels: 3, outputChannels: 3, blocks: 9, ngf: 64, normalization: InstanceNorm2D.self)
 var discriminatorX = NetD(inChannels: 3, lastConvFilters: 64)
 var discriminatorY = NetD(inChannels: 3, lastConvFilters: 64)
 
@@ -48,21 +50,23 @@ var validationImage = dataset.trainSamples[0].domainA.expandingShape(at: 0)
 for (epoch, epochBatches) in dataset.training.prefix(epochCount).enumerated() {
     print("Epoch \(epoch) started at: \(Date())")
     Context.local.learningPhase = .training
-    
+
     for batch in epochBatches {
         Context.local.learningPhase = .training
-        
+
         let inputX = batch.domainA
         let inputY = batch.domainB
 
         // we do it outside of GPU scope so that dataset shuffling happens on CPU side
         let concatanatedImages = inputX.concatenated(with: inputY)
 
-        let scaledImages = resize(images: concatanatedImages,
-                                  size: (286, 286),
-                                  method: .nearest)
-        var croppedImages = scaledImages.slice(lowerBounds: Tensor<Int32>([0, Int32.random(in: 0...29), Int32.random(in: 0...29), 0]),
-                                               sizes: [2, 256, 256, 3])
+        let scaledImages = resize(
+            images: concatanatedImages,
+            size: (286, 286),
+            method: .nearest)
+        var croppedImages = scaledImages.slice(
+            lowerBounds: Tensor<Int32>([0, Int32.random(in: 0...29), Int32.random(in: 0...29), 0]),
+            sizes: [2, 256, 256, 3])
         if Bool.random() {
             croppedImages = croppedImages.reversed(inAxes: 2)
         }
@@ -82,8 +86,8 @@ for (epoch, epochBatches) in dataset.training.prefix(epochCount).enumerated() {
             let fakeX = generatorF(realY)
             let cycledY = g(fakeX)
 
-            let cycleConsistencyLoss = (abs(realX - cycledX).mean() +
-                abs(realY - cycledY).mean()) * lambdaL1
+            let cycleConsistencyLoss =
+                (abs(realX - cycledX).mean() + abs(realY - cycledY).mean()) * lambdaL1
 
             let discFakeY = discriminatorY(fakeY)
             let generatorLoss = sigmoidCrossEntropy(logits: discFakeY, labels: onesd)
@@ -104,8 +108,9 @@ for (epoch, epochBatches) in dataset.training.prefix(epochCount).enumerated() {
             let fakeY = generatorG(realX)
             let cycledX = g(fakeY)
 
-            let cycleConsistencyLoss = (abs(realY - cycledY).mean()
-                + abs(realX - cycledX).mean()) * lambdaL1
+            let cycleConsistencyLoss =
+                (abs(realY - cycledY).mean()
+                    + abs(realX - cycledX).mean()) * lambdaL1
 
             let discFakeX = discriminatorX(fakeX)
             let generatorLoss = sigmoidCrossEntropy(logits: discFakeX, labels: onesd)
@@ -123,8 +128,10 @@ for (epoch, epochBatches) in dataset.training.prefix(epochCount).enumerated() {
             let discFakeX = d(_fakeX)
             let discRealX = d(realX)
 
-            let totalLoss = 0.5 * (sigmoidCrossEntropy(logits: discFakeX, labels: zerosd)
-                + sigmoidCrossEntropy(logits: discRealX, labels: onesd))
+            let totalLoss =
+                0.5
+                * (sigmoidCrossEntropy(logits: discFakeX, labels: zerosd)
+                    + sigmoidCrossEntropy(logits: discRealX, labels: onesd))
 
             return totalLoss
         }
@@ -133,8 +140,10 @@ for (epoch, epochBatches) in dataset.training.prefix(epochCount).enumerated() {
             let discFakeY = d(_fakeY)
             let discRealY = d(realY)
 
-            let totalLoss = 0.5 * (sigmoidCrossEntropy(logits: discFakeY, labels: zerosd)
-                + sigmoidCrossEntropy(logits: discRealY, labels: onesd))
+            let totalLoss =
+                0.5
+                * (sigmoidCrossEntropy(logits: discFakeY, labels: zerosd)
+                    + sigmoidCrossEntropy(logits: discRealY, labels: onesd))
 
             return totalLoss
         }
@@ -148,7 +157,7 @@ for (epoch, epochBatches) in dataset.training.prefix(epochCount).enumerated() {
 
         if step % options.sampleLogPeriod == 0 {
             Context.local.learningPhase = .inference
-            
+
             let fakeSample = generatorG(validationImage) * 0.5 + 0.5
             try fakeSample[0].scaled(by: 255).saveImage(directory: "output", name: "sample")
 

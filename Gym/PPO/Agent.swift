@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import PythonKit
-import TensorFlow
+import TaylorTorch
 
 /// Agent that uses the Proximal Policy Optimization (PPO).
 ///
@@ -101,17 +101,23 @@ class PPOAgent {
         tfRewards = (tfRewards - tfRewards.mean()) / (tfRewards.standardDeviation() + 1e-5)
 
         // Retrieve stored states, actions, and log probabilities
-        let oldStates: Tensor<Float> = Tensor<Float>(numpy: np.array(memory.states, dtype: np.float32))!
-        let oldActions: Tensor<Int32> = Tensor<Int32>(numpy: np.array(memory.actions, dtype: np.int32))!
-        let oldLogProbs: Tensor<Float> = Tensor<Float>(numpy: np.array(memory.logProbs, dtype: np.float32))!
+        let oldStates: Tensor<Float> = Tensor<Float>(
+            numpy: np.array(memory.states, dtype: np.float32))!
+        let oldActions: Tensor<Int32> = Tensor<Int32>(
+            numpy: np.array(memory.actions, dtype: np.int32))!
+        let oldLogProbs: Tensor<Float> = Tensor<Float>(
+            numpy: np.array(memory.logProbs, dtype: np.float32))!
 
         // Optimize actor and critic
         var actorLosses: [Float] = []
         var criticLosses: [Float] = []
         for _ in 0..<epochs {
             // Optimize policy network (actor)
-            let (actorLoss, actorGradients) = valueWithGradient(at: self.actorCritic.actorNetwork) { actorNetwork -> Tensor<Float> in
-                let npIndices = np.stack([np.arange(oldActions.shape[0], dtype: np.int32), oldActions.makeNumpyArray()], axis: 1)
+            let (actorLoss, actorGradients) = valueWithGradient(at: self.actorCritic.actorNetwork) {
+                actorNetwork -> Tensor<Float> in
+                let npIndices = np.stack(
+                    [np.arange(oldActions.shape[0], dtype: np.int32), oldActions.makeNumpyArray()],
+                    axis: 1)
                 let tfIndices = Tensor<Int32>(numpy: npIndices)!
                 let actionProbs = actorNetwork(oldStates).dimensionGathering(atIndices: tfIndices)
 
@@ -122,9 +128,11 @@ class PPOAgent {
                 let advantages: Tensor<Float> = tfRewards - stateValues
                 let surrogateObjective = Tensor(stacking: [
                     ratios * advantages,
-                    ratios.clipped(min:1 - self.clipEpsilon, max: 1 + self.clipEpsilon) * advantages
+                    ratios.clipped(min: 1 - self.clipEpsilon, max: 1 + self.clipEpsilon)
+                        * advantages,
                 ]).min(alongAxes: 0).flattened()
-                let entropyBonus: Tensor<Float> = Tensor<Float>(self.entropyCoefficient * dist.entropy())
+                let entropyBonus: Tensor<Float> = Tensor<Float>(
+                    self.entropyCoefficient * dist.entropy())
                 let loss: Tensor<Float> = -1 * (surrogateObjective + entropyBonus)
 
                 return loss.mean()
@@ -133,7 +141,9 @@ class PPOAgent {
             actorLosses.append(actorLoss.scalarized())
 
             // Optimize value network (critic)
-            let (criticLoss, criticGradients) = valueWithGradient(at: self.actorCritic.criticNetwork) { criticNetwork -> Tensor<Float> in
+            let (criticLoss, criticGradients) = valueWithGradient(
+                at: self.actorCritic.criticNetwork
+            ) { criticNetwork -> Tensor<Float> in
                 let stateValues = criticNetwork(oldStates).flattened()
                 let loss: Tensor<Float> = 0.5 * pow(stateValues - tfRewards, 2)
 

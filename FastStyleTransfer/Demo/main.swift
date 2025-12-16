@@ -1,7 +1,7 @@
 import FastStyleTransfer
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 func printUsage() {
     let exec = URL(string: CommandLine.arguments[0])!.lastPathComponent

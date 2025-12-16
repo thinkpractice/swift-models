@@ -1,0 +1,684 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Benchmarks",
+            "target": "Benchmarks",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Benchmarks"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Benchmarks",
+            "target": "Benchmarks",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Benchmarks"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug pix2pixDemo",
+            "target": "pix2pixDemo",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug pix2pixDemo"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release pix2pixDemo",
+            "target": "pix2pixDemo",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release pix2pixDemo"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug WordSeg",
+            "target": "WordSeg",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug WordSeg"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release WordSeg",
+            "target": "WordSeg",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release WordSeg"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug VariationalAutoencoder1D",
+            "target": "VariationalAutoencoder1D",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug VariationalAutoencoder1D"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release VariationalAutoencoder1D",
+            "target": "VariationalAutoencoder1D",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release VariationalAutoencoder1D"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug VGG-Imagewoof",
+            "target": "VGG-Imagewoof",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug VGG-Imagewoof"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release VGG-Imagewoof",
+            "target": "VGG-Imagewoof",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release VGG-Imagewoof"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Shallow-Water-PDE",
+            "target": "Shallow-Water-PDE",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Shallow-Water-PDE"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Shallow-Water-PDE",
+            "target": "Shallow-Water-PDE",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Shallow-Water-PDE"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug ResNet50-ImageNet",
+            "target": "ResNet50-ImageNet",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug ResNet50-ImageNet"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release ResNet50-ImageNet",
+            "target": "ResNet50-ImageNet",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release ResNet50-ImageNet"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug ResNet-CIFAR10",
+            "target": "ResNet-CIFAR10",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug ResNet-CIFAR10"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release ResNet-CIFAR10",
+            "target": "ResNet-CIFAR10",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release ResNet-CIFAR10"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Regression-BostonHousing",
+            "target": "Regression-BostonHousing",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Regression-BostonHousing"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Regression-BostonHousing",
+            "target": "Regression-BostonHousing",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Regression-BostonHousing"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug PersonLab",
+            "target": "PersonLab",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug PersonLab"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release PersonLab",
+            "target": "PersonLab",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release PersonLab"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug NeuMF-MovieLens",
+            "target": "NeuMF-MovieLens",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug NeuMF-MovieLens"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release NeuMF-MovieLens",
+            "target": "NeuMF-MovieLens",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release NeuMF-MovieLens"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug MobileNetV2-Imagenette",
+            "target": "MobileNetV2-Imagenette",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug MobileNetV2-Imagenette"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release MobileNetV2-Imagenette",
+            "target": "MobileNetV2-Imagenette",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release MobileNetV2-Imagenette"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug MobileNetV1-Imagenette",
+            "target": "MobileNetV1-Imagenette",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug MobileNetV1-Imagenette"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release MobileNetV1-Imagenette",
+            "target": "MobileNetV1-Imagenette",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release MobileNetV1-Imagenette"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug MiniGoDemo",
+            "target": "MiniGoDemo",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug MiniGoDemo"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release MiniGoDemo",
+            "target": "MiniGoDemo",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release MiniGoDemo"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug LeNet-MNIST",
+            "target": "LeNet-MNIST",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug LeNet-MNIST"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release LeNet-MNIST",
+            "target": "LeNet-MNIST",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release LeNet-MNIST"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Gym-PPO",
+            "target": "Gym-PPO",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Gym-PPO"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Gym-PPO",
+            "target": "Gym-PPO",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Gym-PPO"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Gym-FrozenLake",
+            "target": "Gym-FrozenLake",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Gym-FrozenLake"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Gym-FrozenLake",
+            "target": "Gym-FrozenLake",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Gym-FrozenLake"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Gym-DQN",
+            "target": "Gym-DQN",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Gym-DQN"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Gym-DQN",
+            "target": "Gym-DQN",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Gym-DQN"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Gym-CartPole",
+            "target": "Gym-CartPole",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Gym-CartPole"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Gym-CartPole",
+            "target": "Gym-CartPole",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Gym-CartPole"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Gym-Blackjack",
+            "target": "Gym-Blackjack",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Gym-Blackjack"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Gym-Blackjack",
+            "target": "Gym-Blackjack",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Gym-Blackjack"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug GrowingNeuralCellularAutomata",
+            "target": "GrowingNeuralCellularAutomata",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug GrowingNeuralCellularAutomata"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release GrowingNeuralCellularAutomata",
+            "target": "GrowingNeuralCellularAutomata",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release GrowingNeuralCellularAutomata"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug GPT2-WikiText2",
+            "target": "GPT2-WikiText2",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug GPT2-WikiText2"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release GPT2-WikiText2",
+            "target": "GPT2-WikiText2",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release GPT2-WikiText2"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug GPT2-Inference",
+            "target": "GPT2-Inference",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug GPT2-Inference"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release GPT2-Inference",
+            "target": "GPT2-Inference",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release GPT2-Inference"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug GAN",
+            "target": "GAN",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug GAN"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release GAN",
+            "target": "GAN",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release GAN"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Fractals",
+            "target": "Fractals",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Fractals"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Fractals",
+            "target": "Fractals",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Fractals"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug FastStyleTransferDemo",
+            "target": "FastStyleTransferDemo",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug FastStyleTransferDemo"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release FastStyleTransferDemo",
+            "target": "FastStyleTransferDemo",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release FastStyleTransferDemo"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug DCGAN",
+            "target": "DCGAN",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug DCGAN"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release DCGAN",
+            "target": "DCGAN",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release DCGAN"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug CycleGAN",
+            "target": "CycleGAN",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug CycleGAN"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release CycleGAN",
+            "target": "CycleGAN",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release CycleGAN"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Custom-CIFAR10",
+            "target": "Custom-CIFAR10",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Custom-CIFAR10"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Custom-CIFAR10",
+            "target": "Custom-CIFAR10",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Custom-CIFAR10"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Catch",
+            "target": "Catch",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Catch"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Catch",
+            "target": "Catch",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Catch"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug BigTransfer-CIFAR100",
+            "target": "BigTransfer-CIFAR100",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug BigTransfer-CIFAR100"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release BigTransfer-CIFAR100",
+            "target": "BigTransfer-CIFAR100",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release BigTransfer-CIFAR100"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug BERT-CoLA",
+            "target": "BERT-CoLA",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug BERT-CoLA"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release BERT-CoLA",
+            "target": "BERT-CoLA",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release BERT-CoLA"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Autoencoder2D",
+            "target": "Autoencoder2D",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Autoencoder2D"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Autoencoder2D",
+            "target": "Autoencoder2D",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Autoencoder2D"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Debug Autoencoder1D",
+            "target": "Autoencoder1D",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug Autoencoder1D"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-models}",
+            "name": "Release Autoencoder1D",
+            "target": "Autoencoder1D",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release Autoencoder1D"
+        }
+    ]
+}

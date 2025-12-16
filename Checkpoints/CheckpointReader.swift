@@ -14,16 +14,16 @@
 
 // The TensorFlow v2 checkpoint format is described in the following:
 // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/util/tensor_bundle/tensor_bundle.h
-// and consists of an index file (with a `.index` extension) and a series of sharded data files that 
+// and consists of an index file (with a `.index` extension) and a series of sharded data files that
 // have the same base file name, but extensions of the form `.data-00001-of-00020`. The index file
 // contains key-value pairs of metadata that provide shapes of tensors and where to read in the
 // shards to obtain their raw bytes.
 
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
-/// A Swift-native TensorFlow v2 checkpoint reader that can download all checkpoint files from 
+/// A Swift-native TensorFlow v2 checkpoint reader that can download all checkpoint files from
 /// remote locations and store them in a local temporary directory. This reader has no dependencies
 /// on the TensorFlow runtime or libraries.
 open class CheckpointReader {
@@ -45,13 +45,13 @@ open class CheckpointReader {
     /// disabled to speed up reads in debug builds or test cases.
     public var isCRCVerificationEnabled: Bool = true
 
-    /// Initializes the checkpoint reader from either a local or remote directory. If remote, 
+    /// Initializes the checkpoint reader from either a local or remote directory. If remote,
     /// automatically downloads the checkpoint files into a temporary directory.
     ///
     /// - Parameters:
-    ///   - checkpointLocation: Either a URL to the checkpoint files, where the last component is the file 
+    ///   - checkpointLocation: Either a URL to the checkpoint files, where the last component is the file
     ///     base of the checkpoint files, or a URL to an archive containing the checkpoint files.
-    ///   - modelName: A distinct name for the model, to ensure that checkpoints with the same base 
+    ///   - modelName: A distinct name for the model, to ensure that checkpoints with the same base
     ///     name but for different models don't collide when downloaded.
     public init(
         checkpointLocation: URL, modelName: String, additionalFiles: [String] = [],
@@ -71,7 +71,7 @@ open class CheckpointReader {
         }
 
         // If URL that was passed in was a file, or if an archive was downloaded and extracted,
-        // read the local checkpoint from the filesystem. Otherwise, download the index first and 
+        // read the local checkpoint from the filesystem. Otherwise, download the index first and
         // determine what other files to download.
         let checkpointBase = finalCheckpointLocation.lastPathComponent
         let indexReader: CheckpointIndexReader
@@ -86,14 +86,16 @@ open class CheckpointReader {
             self.localCheckpointLocation = temporaryCheckpointBase
             let localIndexFileLocation = temporaryCheckpointBase.appendingPathExtension("index")
             if FileManager.default.fileExists(atPath: localIndexFileLocation.path) {
-                indexReader = try CheckpointIndexReader(file: localIndexFileLocation,
+                indexReader = try CheckpointIndexReader(
+                    file: localIndexFileLocation,
                     fileSystem: fileSystem)
                 self.header = try indexReader.readHeader()
             } else {
                 // The index file contains the number of shards, so obtain that first.
                 try CheckpointReader.downloadIndexFile(
                     from: finalCheckpointLocation, to: temporaryDirectory)
-                indexReader = try CheckpointIndexReader(file: localIndexFileLocation,
+                indexReader = try CheckpointIndexReader(
+                    file: localIndexFileLocation,
                     fileSystem: fileSystem)
                 self.header = try indexReader.readHeader()
 

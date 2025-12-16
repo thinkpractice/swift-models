@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 
 /// A generic tuple of two tensors `Tensor`.
-/// 
+///
 /// - Note: `TensorPair` has a generic name and provides little semantic information, to conform to
 /// `Collatable`. You can use it for most basic datasets with one tensor of inputs and one tensor of
 /// labels but you should write your own struct for more complex tasks (or if you want more descriptive
@@ -23,7 +23,7 @@ import TensorFlow
 public struct TensorPair<S1: TensorFlowScalar, S2: TensorFlowScalar>: KeyPathIterable {
     public var first: Tensor<S1>
     public var second: Tensor<S2>
-    
+
     /// Creates from `first` and `second` tensors.
     public init(first: Tensor<S1>, second: Tensor<S2>) {
         self.first = first

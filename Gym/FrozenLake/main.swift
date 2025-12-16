@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import PythonKit
-import TensorFlow
+import TaylorTorch
 
 // Force unwrapping with `!` does not provide source location when unwrapping `nil`, so we instead
 // make a utility function for debuggability.
-fileprivate extension Optional {
-    func unwrapped(file: StaticString = #filePath, line: UInt = #line) -> Wrapped {
+extension Optional {
+    fileprivate func unwrapped(file: StaticString = #filePath, line: UInt = #line) -> Wrapped {
         guard let unwrapped = self else {
             fatalError("Value is nil", file: (file), line: line)
         }
@@ -60,14 +60,14 @@ class Agent {
         actionCount = Int(environment.action_space.n).unwrapped()
         state = State(environment.reset()).unwrapped()
     }
-    
+
     func sampleEnvironment(
-      _ environment: PythonObject
+        _ environment: PythonObject
     ) -> (
-      state: State,
-      action: Int,
-      reward: Float,
-      newState: State
+        state: State,
+        action: Int,
+        reward: Float,
+        newState: State
     ) {
         let action = environment.action_space.sample()
         let (newState, reward, isDone, _) = environment.step(action).tuple4
@@ -78,10 +78,12 @@ class Agent {
         } else {
             state = State(newState).unwrapped()
         }
-        return (oldState,
-                Int(action).unwrapped(),
-                Float(reward).unwrapped(),
-                State(newState).unwrapped())
+        return (
+            oldState,
+            Int(action).unwrapped(),
+            Float(reward).unwrapped(),
+            State(newState).unwrapped()
+        )
     }
 
     func bestValueAndAction(state: State) -> (bestValue: Float, bestAction: Action) {
@@ -103,7 +105,7 @@ class Agent {
         let newValue = reward + discountRate * bestValue
         let stateAction = StateAction(state: state, action: action)
         let oldValue = actionValues[stateAction] ?? 0.0
-        actionValues[stateAction] = oldValue * (1-learningRate) + newValue * learningRate
+        actionValues[stateAction] = oldValue * (1 - learningRate) + newValue * learningRate
     }
 
     func playEpisode(testEnvironment: PythonObject) -> Float {

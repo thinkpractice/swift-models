@@ -20,7 +20,7 @@
 // DOI=http://dx.doi.org/10.1145/2827872
 
 import Foundation
-import TensorFlow
+import TaylorTorch
 
 extension Sequence where Element: Collection {
     subscript(column column: Element.Index) -> [Element.Iterator.Element] {
@@ -40,7 +40,7 @@ public struct MovieLens<Entropy: RandomNumberGenerator> {
     public let testData: [[Float]]
     public let items: [Float]
     public let numUsers: Int
-    public let numItems: Int  
+    public let numItems: Int
     public let user2id: [Float: Int]
     public let id2user: [Int: Float]
     public let item2id: [Float: Int]
@@ -51,9 +51,9 @@ public struct MovieLens<Entropy: RandomNumberGenerator> {
     public typealias Batches = Slices<Sampling<Samples, ArraySlice<Int>>>
     public typealias BatchedTensorPair = TensorPair<Int32, Float>
     public typealias Training = LazyMapSequence<
-        TrainingEpochs<Samples, Entropy>, 
+        TrainingEpochs<Samples, Entropy>,
         LazyMapSequence<Batches, BatchedTensorPair>
-      >
+    >
     public let trainMatrix: Samples
     public let training: Training
 
@@ -70,8 +70,9 @@ public struct MovieLens<Entropy: RandomNumberGenerator> {
     }
 
     public init(
-            trainBatchSize: Int = 1024, 
-            entropy: Entropy) {
+        trainBatchSize: Int = 1024,
+        entropy: Entropy
+    ) {
         let trainFiles = try! String(
             contentsOf: MovieLens.downloadMovieLensDatasetIfNotPresent().appendingPathComponent(
                 "u1.base"), encoding: .utf8)
@@ -142,12 +143,12 @@ public struct MovieLens<Entropy: RandomNumberGenerator> {
 
         self.trainMatrix = dataset
         self.training = TrainingEpochs(
-            samples: trainMatrix, 
-            batchSize: trainBatchSize, 
+            samples: trainMatrix,
+            batchSize: trainBatchSize,
             entropy: entropy
         ).lazy.map { (batches: Batches) -> LazyMapSequence<Batches, BatchedTensorPair> in
             batches.lazy.map {
-                TensorPair<Int32, Float> (
+                TensorPair<Int32, Float>(
                     first: Tensor<Int32>($0.map(\.first)),
                     second: Tensor<Float>($0.map(\.second))
                 )
@@ -159,7 +160,7 @@ public struct MovieLens<Entropy: RandomNumberGenerator> {
 extension MovieLens where Entropy == SystemRandomNumberGenerator {
     public init(trainBatchSize: Int = 1024) {
         self.init(
-            trainBatchSize: trainBatchSize, 
+            trainBatchSize: trainBatchSize,
             entropy: SystemRandomNumberGenerator())
     }
 }

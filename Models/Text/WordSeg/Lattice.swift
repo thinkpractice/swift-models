@@ -14,7 +14,7 @@
 
 import _Differentiation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 #if os(iOS) || os(macOS) || os(tvOS) || os(watchOS)
   import Darwin

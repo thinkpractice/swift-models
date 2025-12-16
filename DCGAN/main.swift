@@ -15,7 +15,7 @@
 import Datasets
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 let batchSize = 512
 let epochCount = 20

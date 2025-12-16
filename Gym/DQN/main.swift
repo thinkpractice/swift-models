@@ -14,7 +14,7 @@
 
 import Foundation
 import PythonKit
-import TensorFlow
+import TaylorTorch
 
 // Initialize Python. This comment is a hook for internal use, do not remove.
 
@@ -23,41 +23,41 @@ let gym = Python.import("gym")
 let plt = Python.import("matplotlib.pyplot")
 
 class TensorFlowEnvironmentWrapper {
-  let originalEnv: PythonObject
+    let originalEnv: PythonObject
 
-  init(_ env: PythonObject) {
-    self.originalEnv = env
-  }
+    init(_ env: PythonObject) {
+        self.originalEnv = env
+    }
 
-  func reset() -> Tensor<Float> {
-    let state = self.originalEnv.reset()
-    return Tensor<Float>(numpy: np.array(state, dtype: np.float32))!
-  }
+    func reset() -> Tensor<Float> {
+        let state = self.originalEnv.reset()
+        return Tensor<Float>(numpy: np.array(state, dtype: np.float32))!
+    }
 
-  func step(_ action: Tensor<Int32>) -> (
-    state: Tensor<Float>, reward: Tensor<Float>, isDone: Tensor<Bool>, info: PythonObject
-  ) {
-    let (state, reward, isDone, info) = originalEnv.step(action.scalarized()).tuple4
-    let tfState = Tensor<Float>(numpy: np.array(state, dtype: np.float32))!
-    let tfReward = Tensor<Float>(numpy: np.array(reward, dtype: np.float32))!
-    let tfIsDone = Tensor<Bool>(numpy: np.array(isDone, dtype: np.bool))!
-    return (tfState, tfReward, tfIsDone, info)
-  }
+    func step(_ action: Tensor<Int32>) -> (
+        state: Tensor<Float>, reward: Tensor<Float>, isDone: Tensor<Bool>, info: PythonObject
+    ) {
+        let (state, reward, isDone, info) = originalEnv.step(action.scalarized()).tuple4
+        let tfState = Tensor<Float>(numpy: np.array(state, dtype: np.float32))!
+        let tfReward = Tensor<Float>(numpy: np.array(reward, dtype: np.float32))!
+        let tfIsDone = Tensor<Bool>(numpy: np.array(isDone, dtype: np.bool))!
+        return (tfState, tfReward, tfIsDone, info)
+    }
 }
 
 func evaluate(_ agent: DeepQNetworkAgent) -> Float {
-  let evalEnv = TensorFlowEnvironmentWrapper(gym.make("CartPole-v0"))
-  var evalEpisodeReturn: Float = 0
-  var state: Tensor<Float> = evalEnv.reset()
-  var reward: Tensor<Float>
-  var evalIsDone: Tensor<Bool> = Tensor<Bool>(false)
-  while evalIsDone.scalarized() == false {
-    let action = agent.getAction(state: state, epsilon: 0)
-    (state, reward, evalIsDone, _) = evalEnv.step(action)
-    evalEpisodeReturn += reward.scalarized()
-  }
+    let evalEnv = TensorFlowEnvironmentWrapper(gym.make("CartPole-v0"))
+    var evalEpisodeReturn: Float = 0
+    var state: Tensor<Float> = evalEnv.reset()
+    var reward: Tensor<Float>
+    var evalIsDone: Tensor<Bool> = Tensor<Bool>(false)
+    while evalIsDone.scalarized() == false {
+        let action = agent.getAction(state: state, epsilon: 0)
+        (state, reward, evalIsDone, _) = evalEnv.step(action)
+        evalEpisodeReturn += reward.scalarized()
+    }
 
-  return evalEpisodeReturn
+    return evalEpisodeReturn
 }
 
 // Hyperparameters
@@ -126,18 +126,18 @@ var qNet = DeepQNetwork(observationSize: 4, hiddenSize: hiddenSize, actionCount:
 var targetQNet = DeepQNetwork(observationSize: 4, hiddenSize: hiddenSize, actionCount: 2)
 let optimizer = Adam(for: qNet, learningRate: learningRate)
 var replayBuffer = ReplayBuffer(
-  capacity: replayBufferCapacity,
-  combined: useCombinedExperienceReplay
+    capacity: replayBufferCapacity,
+    combined: useCombinedExperienceReplay
 )
 var agent = DeepQNetworkAgent(
-  qNet: qNet,
-  targetQNet: targetQNet,
-  optimizer: optimizer,
-  replayBuffer: replayBuffer,
-  discount: discount,
-  minBufferSize: minBufferSize,
-  doubleDQN: useDoubleDQN,
-  device: device
+    qNet: qNet,
+    targetQNet: targetQNet,
+    optimizer: optimizer,
+    replayBuffer: replayBuffer,
+    discount: discount,
+    minBufferSize: minBufferSize,
+    doubleDQN: useDoubleDQN,
+    device: device
 )
 
 // RL Loop
@@ -149,49 +149,50 @@ var losses: [Float] = []
 var state = env.reset()
 var bestReturn: Float = 0
 while episodeIndex < maxEpisode {
-  stepIndex += 1
+    stepIndex += 1
 
-  // Interact with environment
-  let epsilon: Float =
-    epsilonEnd + (epsilonStart - epsilonEnd) * exp(-1.0 * Float(stepIndex) / epsilonDecay)
-  let action = agent.getAction(state: state, epsilon: epsilon)
-  let (nextState, reward, isDone, _) = env.step(action)
-  episodeReturn += reward.scalarized()
+    // Interact with environment
+    let epsilon: Float =
+        epsilonEnd + (epsilonStart - epsilonEnd) * exp(-1.0 * Float(stepIndex) / epsilonDecay)
+    let action = agent.getAction(state: state, epsilon: epsilon)
+    let (nextState, reward, isDone, _) = env.step(action)
+    episodeReturn += reward.scalarized()
 
-  // Save interaction to replay buffer
-  replayBuffer.append(
-    state: state, action: action, reward: reward, nextState: nextState, isDone: isDone)
+    // Save interaction to replay buffer
+    replayBuffer.append(
+        state: state, action: action, reward: reward, nextState: nextState, isDone: isDone)
 
-  // Train agent
-  losses.append(agent.train(batchSize: batchSize))
+    // Train agent
+    losses.append(agent.train(batchSize: batchSize))
 
-  // Periodically update Target Net
-  if stepIndex % targetNetUpdateRate == 0 {
-    agent.updateTargetQNet(tau: softTargetUpdateRate)
-  }
-
-  // End-of-episode
-  if isDone.scalarized() == true {
-    state = env.reset()
-    episodeIndex += 1
-    let evalEpisodeReturn = evaluate(agent)
-    episodeReturns.append(evalEpisodeReturn)
-    if evalEpisodeReturn > bestReturn {
-      print(
-        String(
-          format: "Episode: %4d | Step %6d | Epsilon: %.03f | Train: %3d | Eval: %3d", episodeIndex,
-          stepIndex, epsilon, Int(episodeReturn), Int(evalEpisodeReturn)))
-      bestReturn = evalEpisodeReturn
+    // Periodically update Target Net
+    if stepIndex % targetNetUpdateRate == 0 {
+        agent.updateTargetQNet(tau: softTargetUpdateRate)
     }
-    if evalEpisodeReturn > 199 {
-      print("Solved in \(episodeIndex) episodes with \(stepIndex) steps!")
-      break
-    }
-    episodeReturn = 0
-  }
 
-  // End-of-step
-  state = nextState
+    // End-of-episode
+    if isDone.scalarized() == true {
+        state = env.reset()
+        episodeIndex += 1
+        let evalEpisodeReturn = evaluate(agent)
+        episodeReturns.append(evalEpisodeReturn)
+        if evalEpisodeReturn > bestReturn {
+            print(
+                String(
+                    format: "Episode: %4d | Step %6d | Epsilon: %.03f | Train: %3d | Eval: %3d",
+                    episodeIndex,
+                    stepIndex, epsilon, Int(episodeReturn), Int(evalEpisodeReturn)))
+            bestReturn = evalEpisodeReturn
+        }
+        if evalEpisodeReturn > 199 {
+            print("Solved in \(episodeIndex) episodes with \(stepIndex) steps!")
+            break
+        }
+        episodeReturn = 0
+    }
+
+    // End-of-step
+    state = nextState
 }
 
 // Save learning curve
@@ -205,8 +206,8 @@ plt.clf()
 // Save smoothed learning curve
 let runningMeanWindow: Int = 10
 let smoothedEpisodeReturns = np.convolve(
-  episodeReturns, np.ones((runningMeanWindow)) / np.array(runningMeanWindow, dtype: np.int32),
-  mode: "same")
+    episodeReturns, np.ones((runningMeanWindow)) / np.array(runningMeanWindow, dtype: np.int32),
+    mode: "same")
 
 plt.plot(episodeReturns)
 plt.title("Deep Q-Network on CartPole-v0")

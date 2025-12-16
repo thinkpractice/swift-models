@@ -1,7 +1,7 @@
 import sys
 import torch
 import numpy as np
-import tensorflow as tf
+import TaylorTorch as tf
 
 # Usage:
 # python torch-convert.py model.pth model

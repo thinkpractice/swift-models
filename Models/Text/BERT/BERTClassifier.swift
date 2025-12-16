@@ -17,26 +17,26 @@
 
 import Datasets
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 public struct BERTClassifier: Module, Regularizable {
-  public var bert: BERT
-  public var dense: Dense<Float>
+    public var bert: BERT
+    public var dense: Dense<Float>
 
-  public var regularizationValue: TangentVector {
-    TangentVector(
-      bert: bert.regularizationValue,
-      dense: dense.regularizationValue)
-  }
+    public var regularizationValue: TangentVector {
+        TangentVector(
+            bert: bert.regularizationValue,
+            dense: dense.regularizationValue)
+    }
 
-  public init(bert: BERT, classCount: Int) {
-    self.bert = bert
-    self.dense = Dense<Float>(inputSize: bert.hiddenSize, outputSize: classCount)
-  }
+    public init(bert: BERT, classCount: Int) {
+        self.bert = bert
+        self.dense = Dense<Float>(inputSize: bert.hiddenSize, outputSize: classCount)
+    }
 
-  /// Returns: logits with shape `[batchSize, classCount]`.
-  @differentiable(wrt: self)
-  public func callAsFunction(_ input: TextBatch) -> Tensor<Float> {
-    dense(bert(input)[0..., 0])
-  }
+    /// Returns: logits with shape `[batchSize, classCount]`.
+    @differentiable(wrt: self)
+    public func callAsFunction(_ input: TextBatch) -> Tensor<Float> {
+        dense(bert(input)[0..., 0])
+    }
 }

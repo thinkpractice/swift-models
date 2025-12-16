@@ -14,7 +14,7 @@
 
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 // TODO: Extend handling to different tensor types.
 
@@ -27,7 +27,8 @@ open class CheckpointWriter {
     ///
     /// - Parameters:
     ///   - fileSystem: The filesystem used for writing the checkpoint.
-    public init(fileSystem: FileSystem = FoundationFileSystem()
+    public init(
+        fileSystem: FileSystem = FoundationFileSystem()
     ) {
         self.fileSystem = fileSystem
     }
@@ -96,7 +97,8 @@ extension CheckpointWriter {
             if let tensor = child.value as? Tensor<Float> {
                 if tensors[path] != nil {
                     print(
-                        "Warning: Saved two different tensors with the same name: \(path). This is most likely undesired behavior.")
+                        "Warning: Saved two different tensors with the same name: \(path). This is most likely undesired behavior."
+                    )
                 }
                 tensors[path] = tensor
                 return false
@@ -105,14 +107,14 @@ extension CheckpointWriter {
             }
         }
     }
-    
+
     static func recursivelyVisitTensors(
         _ current: Any, scope: String? = nil, separator: String,
         ignoredTensorPaths: Set<String> = [], visitor: (Mirror.Child, String) -> Bool
     ) {
         let currentType = String(describing: type(of: current.self))
         let m = Mirror(reflecting: current)
-        
+
         var previousNames: [String: Int] = [:]
         var emptyCount = 0
         for child in m.children {
@@ -141,7 +143,7 @@ extension CheckpointWriter {
             }
         }
     }
-    
+
     static func remapTensorNames(
         tensors: [String: Tensor<Float>], nameMap: (String) -> String
     ) -> [String: Tensor<Float>] {
@@ -151,13 +153,13 @@ extension CheckpointWriter {
         }
         return remappedTensors
     }
-    
+
     static func lookupMap(table: [String: String]) -> (String) -> String {
-        return {name in
+        return { name in
             return table[name] ?? name
         }
     }
-    
+
     static func identityMap(_ name: String) -> String {
         return name
     }

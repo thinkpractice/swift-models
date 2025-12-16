@@ -15,80 +15,82 @@
 import Checkpoints
 import Foundation
 import ModelSupport
-import TensorFlow
+import TaylorTorch
 
 public struct Config {
-  let printProfilingData: Bool
-  var checkpointPath = URL(
-    string:
-      "https://github.com/tryolabs/swift-models/releases/download/PersonlabDemo/personlabCheckpoint.zip"
-  )!
-  let inputImageSize = (height: 241, width: 289)
+    let printProfilingData: Bool
+    var checkpointPath = URL(
+        string:
+            "https://github.com/tryolabs/swift-models/releases/download/PersonlabDemo/personlabCheckpoint.zip"
+    )!
+    let inputImageSize = (height: 241, width: 289)
 
-  // Decoder
-  let outputStride = 16
-  let poseScoreThreshold: Float = 0.15
-  let keypointScoreThreshold: Float = 0.1
-  let nmsRadius: Float = 20.0
-  let keypointLocalMaximumRadius = 1
+    // Decoder
+    let outputStride = 16
+    let poseScoreThreshold: Float = 0.15
+    let keypointScoreThreshold: Float = 0.1
+    let nmsRadius: Float = 20.0
+    let keypointLocalMaximumRadius = 1
 }
 
 extension CheckpointReader {
-  func load(from name: String) -> Tensor<Float> {
-    return Tensor(self.loadTensor(named: "MobilenetV1/\(name)"))
-  }
+    func load(from name: String) -> Tensor<Float> {
+        return Tensor(self.loadTensor(named: "MobilenetV1/\(name)"))
+    }
 }
 
 func draw(_ pose: Pose, on imageTensor: inout Tensor<Float>) {
-  var pose = pose
-  pose.rescale(to: (height: imageTensor.shape[0], width: imageTensor.shape[1]))
+    var pose = pose
+    pose.rescale(to: (height: imageTensor.shape[0], width: imageTensor.shape[1]))
 
-  func recursivellyDrawNextKeypoint(
-    after previousKeypoint: Keypoint, into imageTensor: inout Tensor<Float>
-  ) {
-    for (nextKeypointIndex, direction) in getNextKeypointIndexAndDirection(previousKeypoint.index) {
-      if direction == .fwd {
-        if let nextKeypoint = pose.getKeypoint(nextKeypointIndex) {
-          drawLine(
-            on: &imageTensor,
-            from: (Int(previousKeypoint.x), Int(previousKeypoint.y)),
-            to: (Int(nextKeypoint.x), Int(nextKeypoint.y))
-          )
-          recursivellyDrawNextKeypoint(after: nextKeypoint, into: &imageTensor)
+    func recursivellyDrawNextKeypoint(
+        after previousKeypoint: Keypoint, into imageTensor: inout Tensor<Float>
+    ) {
+        for (nextKeypointIndex, direction) in getNextKeypointIndexAndDirection(
+            previousKeypoint.index)
+        {
+            if direction == .fwd {
+                if let nextKeypoint = pose.getKeypoint(nextKeypointIndex) {
+                    drawLine(
+                        on: &imageTensor,
+                        from: (Int(previousKeypoint.x), Int(previousKeypoint.y)),
+                        to: (Int(nextKeypoint.x), Int(nextKeypoint.y))
+                    )
+                    recursivellyDrawNextKeypoint(after: nextKeypoint, into: &imageTensor)
+                }
+            }
         }
-      }
     }
-  }
 
-  recursivellyDrawNextKeypoint(after: pose.getKeypoint(.nose)!, into: &imageTensor)
+    recursivellyDrawNextKeypoint(after: pose.getKeypoint(.nose)!, into: &imageTensor)
 }
 
 /// Used as an ad-hoc "hash" for tensor checking when copying the backbone from
 /// our Python Tensorflow 1.5 version
 func hash(_ tensor: Tensor<Float>) {
-  print(
-    "[\(tensor.flattened().sum()), \(tensor[0, 0, 0]) \(tensor[0, -1, 1]), \(tensor[0, 1, 0]), \(tensor[0, -1, -1])]"
-  )
+    print(
+        "[\(tensor.flattened().sum()), \(tensor[0, 0, 0]) \(tensor[0, -1, 1]), \(tensor[0, 1, 0]), \(tensor[0, -1, -1])]"
+    )
 }
 
 /// Wrapper for Tensor which allows several order of magnitude faster subscript access,
 /// as it avoids unnecesary GPU->CPU copies on each access.
 struct CPUTensor<T: TensorFlowScalar> {
-  private var flattenedTensor: [T]
-  var shape: TensorShape
+    private var flattenedTensor: [T]
+    var shape: TensorShape
 
-  init(_ tensor: Tensor<T>) {
-    self.flattenedTensor = tensor.scalars
-    self.shape = tensor.shape
-  }
-
-  subscript(indexes: Int...) -> T {
-    var oneDimensionalIndex = 0
-    for i in 1..<shape.count {
-      oneDimensionalIndex += indexes[i - 1] * shape[i...].reduce(1, *)
+    init(_ tensor: Tensor<T>) {
+        self.flattenedTensor = tensor.scalars
+        self.shape = tensor.shape
     }
-    // Last dimension doesn't have multipliers.
-    oneDimensionalIndex += indexes.last!
-    return flattenedTensor[oneDimensionalIndex]
-  }
+
+    subscript(indexes: Int...) -> T {
+        var oneDimensionalIndex = 0
+        for i in 1..<shape.count {
+            oneDimensionalIndex += indexes[i - 1] * shape[i...].reduce(1, *)
+        }
+        // Last dimension doesn't have multipliers.
+        oneDimensionalIndex += indexes.last!
+        return flattenedTensor[oneDimensionalIndex]
+    }
 }

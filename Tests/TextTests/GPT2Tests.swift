@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import TensorFlow
+import TaylorTorch
 import XCTest
 
 @testable import TextModels
@@ -24,8 +24,8 @@ final class GPT2Tests: XCTestCase {
         do {
             // Load saved model from checkpoint.
             gpt2 = try GPT2()
-        } catch { 
-            XCTFail(error.localizedDescription) 
+        } catch {
+            XCTFail(error.localizedDescription)
         }
     }
 
@@ -47,7 +47,7 @@ final class GPT2Tests: XCTestCase {
 
     func testGPT2Generate() {
         Context.local.learningPhase = .inference
-        
+
         guard let gpt2 = GPT2Tests.gpt2 else {
             XCTFail("GPT2 failed to initialized")
             return
@@ -56,8 +56,8 @@ final class GPT2Tests: XCTestCase {
         do {
             let gpt2Result = try gpt2.generate()
             XCTAssert(gpt2Result.count > 0)
-        } catch { 
-            XCTFail(error.localizedDescription) 
+        } catch {
+            XCTFail(error.localizedDescription)
         }
     }
 }
